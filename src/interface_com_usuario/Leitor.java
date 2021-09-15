@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Leitor {
 
+
     /** ------------------------------------------------------------- */
     /** CONSTRUTOR DE CLASSE ESTÁTICA */
 

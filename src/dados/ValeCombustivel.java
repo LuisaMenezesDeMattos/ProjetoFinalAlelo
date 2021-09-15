@@ -1,6 +1,19 @@
 package dados;
 
+import java.util.Date;
+
 public class ValeCombustivel extends CartaoBeneficio {
+
+    public ValeCombustivel() {
+    }
+
+    public ValeCombustivel(int[] _senha) {
+        super(_senha);
+    }
+
+    public ValeCombustivel(int[] _senha, Date _dataValidade) {
+        super(_senha, _dataValidade);
+    }
 
     @Override
     public boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra) {

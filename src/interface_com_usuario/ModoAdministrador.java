@@ -1,8 +1,8 @@
 package interface_com_usuario;
 
-import dados.Beneficiario;
+import dados.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class ModoAdministrador {
 
@@ -19,19 +19,96 @@ public class ModoAdministrador {
     /** ------------------------------------------------------------- */
     /** MÉTODOS PRIVADOS */
 
-    /** Método que lê dados no novo beneficiário, e o adiciona à listaUsuariosCadastrados */
-    private void cadastrarNovoBeneficiario(){
+    private ArrayList<CartaoBeneficio> lerDadosCartoes(){
 
-        // lê nome e senha do novo beneficiário, e lê as senhas desejadas para
-        // cada cartão, e então cria um novo usuário do tipo beneficiário
-        // com esse nome, essa senha, e os cartões gerados. O saldo e a data de
-        // validade dos cartões será gerada automaticamente de acordo com o
-        // definido pelo administrador
+        var cartoesBeneficiario = new ArrayList<CartaoBeneficio>();
+
+        /* Senhas dos Cartões */
+        Impressora.msgBasica("Deseja definir senhas aleatórias para os cartões, ou definir manualmente?:");
+        Impressora.msgBasica("('a' - aleatório  |  'm' - manual)");
+        char opcao = Leitor.lerOpcao(new char[]{'a', 'm'});
+        Impressora.aumentarIndentacao();
+
+        Map<TipoCartaoBeneficio, int[]> senhas = new HashMap<>();
+        TipoCartaoBeneficio[] tiposDeCartao = TipoCartaoBeneficio.values();
+
+        if(opcao == 'a'){
+
+
+
+            for (var tipoDeCartao: tiposDeCartao) {
+                var senhaGerada = CartaoBeneficio.gerarSenhaAleatoria();
+                senhas.put(tipoDeCartao, senhaGerada);
+                Impressora.msgSenha("Senha do " + tipoDeCartao.toString(), senhaGerada);
+            }
+
+        }
+        else if(opcao == 'm'){
+
+            for (var tipoDeCartao: tiposDeCartao) {
+                var senhaGerada = Leitor.lerArrayDeInteiros(4);;
+                senhas.put(tipoDeCartao, senhaGerada);
+                Impressora.msgSenha("Senha do " + tipoDeCartao.toString(), senhaGerada);
+            }
+
+        }
+        Impressora.diminuirIndentacao();
+
+        /* Validade dos Cartões */
+        Impressora.msgBasica("Deseja usar a validade padrão para os cartões (12 meses), ou defini-las manualmente?");
+        Impressora.msgBasica("('p' - padrão  |  'm' - manual)");
+        opcao = Leitor.lerOpcao(new char[]{'p', 'm'});
+        Impressora.aumentarIndentacao();
+        if(opcao == 'p'){
+            Impressora.msgAtencao("Validade dos 3 cartões definida para daqui 12 meses");
+
+            for (var tipoDeCartao: tiposDeCartao) {
+                cartoesBeneficiario.add(tipoDeCartao.fabricar(senhas.get(tipoDeCartao)));
+            }
+            Impressora.diminuirIndentacao();
+            return cartoesBeneficiario;
+        }
+        else if(opcao == 'm'){
+            Impressora.msgBasica("Favor informar a validade, em meses, de cada cartão:");
+            Impressora.msgBasica("   (Obs.: para cartões vencidos, digite uma quatidade negativa de meses)");
+
+
+            for (var tipoDeCartao: tiposDeCartao) {
+                Impressora.msgBasica(tipoDeCartao.toString());
+                Date dateValidade = CartaoBeneficio.calcularDataValidade(Leitor.lerInteiro());
+                cartoesBeneficiario.add(tipoDeCartao.fabricar(senhas.get(tipoDeCartao), dateValidade));
+            }
+
+
+            Impressora.diminuirIndentacao();
+            return cartoesBeneficiario;
+        }
+
+        Impressora.diminuirIndentacao();
+        return cartoesBeneficiario;
 
     }
 
+    //todo
+    /** Método que lê dados no novo beneficiário, e o adiciona à listaUsuariosCadastrados */
+    private void cadastrarNovoBeneficiario(){
+
+        Impressora.msgBasica("Nome do Beneficiário:");
+        var nome = Leitor.lerString();
+        Impressora.msgBasica("Senha do Beneficiário (6 dígitos):");
+        var senha = Leitor.lerArrayDeInteiros(6);
+        var cartoes = lerDadosCartoes();
+        var novoBeneficiario = new Beneficiario(nome, senha, cartoes);
+        this.listaBeneficiariosCadastrados.add(novoBeneficiario);
+        Impressora.msgAtencao("Cadastro realizado com sucesso");
+
+    }
+
+    //todo
     /** Método que imprime a lista de beneficiários cadastrado em forma de texto */
     private void visualizarBeneficiarios(){
+
+        Impressora.msgBasica("Falta implementar função");
 
         // imprime na tela o nome de todos os beneficiários em listaBeneficiariosCadastrados,
         // e seus saldos de cada cartão, de forma amigável para leitura
@@ -66,7 +143,7 @@ public class ModoAdministrador {
             }
             else {
                 --tentativas;
-                Impressora.msgAtencao("Senha incorreta! ");
+                Impressora.msgAtencao("Senha incorreta");
                 Impressora.msgBasica(tentativas + " tentativas restantes.");
             }
             if (tentativas == 0) {
@@ -84,112 +161,70 @@ public class ModoAdministrador {
      * Autores: Rafael & Luísa */
     public void rodar(){
 
-        /* Variáveis locais */
-        int operacao = 0;
-        boolean sair = false;
-        /*double saldoAlimentacao = 1000;
-        double saldoRefeicao = 1000;
-        double saldoCombustivel = 1000;
-        double valorRemovido = 0;
-        double valorAdcionado = 0;*/
+        /* Título */
+        Impressora.titulo("Modo Administrador");
+
+        /* Menu */
+        Impressora.linhaVazia();
+        Impressora.subtitulo("Menu do Administrador");
+        Impressora.msgOpcao('1', "Cadastrar novo beneficiário");
+        Impressora.msgOpcao('2', "Ver lista de beneficiários cadastrados");
+        Impressora.msgOpcao('3', "Editar dados dos cartões de um beneficiário");
+        Impressora.msgOpcao('s', "Sair do Modo Administrador");
+        Impressora.linhaSeparadora();
 
         /* Escolher e executar as opções */
-        while(operacao != 's'){
+        char opcao;
+        do{
 
-            /* Imprimir opções do menu */
-            Impressora.titulo("Modo Administrador");
+            /* Escolher a opção */
+
             Impressora.linhaVazia();
-            Impressora.msgOpcao('1', "Acrescentar Saldo"); // não-essencial, fazer se der tempo
-            Impressora.msgOpcao('2', "Retirar Saldo"); // não-essencial, fazer se der tempo
-            Impressora.msgOpcao('3', "Cadastrar novo beneficiário");
-            Impressora.msgOpcao('4', "Mostrar lista de beneficiários cadastrados");
-            Impressora.msgOpcao('s', "Sair do Modo Administrador");
+            Impressora.msgBasica("Digite a opção desejada:");
+            opcao = Leitor.lerOpcao(new char[]{'1', '2', '3', 's'});
 
-            /* Pedir entrada da opção desejada */
-            operacao = Leitor.lerOpcao(new char[]{'1', '2', '3', '4', 's'});
-
-            /* OPÇÃO 1: Acrescentar saldo */
-            if (operacao == '1'){
-                    /*msgBasica("Digite os valores que deseja adicionar ao saldo dos cartões:\n");
-
-                    msgBasica("Digite o saldo a acrescentar do vale alimentação:");
-                    valorAdcionado = leitor.lerDouble();
-                    saldoAlimentacao += valorAdcionado;
-
-                    msgBasica("Digite o saldo a acrescentar do vale combustivel:");
-                    valorAdcionado = leitor.lerDouble();
-                    saldoCombustivel += valorAdcionado;
-
-                    msgBasica("Digite o saldo a acrescentar do vale refeição:");
-                    valorAdcionado = leitor.lerDouble();
-                    saldoRefeicao += valorAdcionado;
-
-                    msgBasica("\n Saldo adicionado com sucesso");
-
-                    linhaSeparadora();
-                    msgBasica("Saldo atual:");
-                    msgBasica("alimentação " + saldoAlimentacao);
-                    msgBasica("combustivel " + saldoCombustivel);
-                    msgBasica("refeição " + saldoRefeicao);*/
-
-                Impressora.msgBasica("Falta implementar função");
-
+            /* Organização e indentação */
+            if(opcao == 's'){
+                continue;
+            }else{
+                Impressora.linhaVazia();
+                Impressora.aumentarIndentacao();
             }
 
-            /* OPÇÃO 2: Retirar Saldo */
-            else if (operacao == '2'){
-                    /*msgBasica("Digite os valores que deseja remover do saldo dos cartões:\n");
+            /* Executar opção escolhida */
+            switch(opcao){
 
-                    msgBasica("Digite o saldo a remover do vale alimentação:");
-                    valorRemovido = leitor.lerDouble();
-                    saldoAlimentacao -= valorRemovido;
+                /* OPÇÃO 1: Cadastrar novo beneficiário */
+                case '1':
+                    Impressora.subtitulo("Cadastrar novo Beneficiário:");
+                    cadastrarNovoBeneficiario();
+                    break;
 
-                    msgBasica("Digite o saldo a remover do vale combustivel:");
-                    valorRemovido = leitor.lerDouble();
-                    saldoCombustivel -= valorRemovido;
+                /* OPÇÃO 2: Mostrar lista beneficiários cadastrados */
+                case '2':
+                    Impressora.subtitulo("Beneficiários Cadastrados:");
+                    visualizarBeneficiarios();
+                    break;
 
-                    msgBasica("Digite o saldo a remover do vale refeição:");
-                    valorRemovido = leitor.lerDouble();
-                    saldoRefeicao -= valorRemovido;
-
-                    msgBasica("\n Saldo removido com sucesso");
-
-                    linhaSeparadora();
-                    msgBasica("saldo atual:");
-                    msgBasica("alimentação " + saldoAlimentacao);
-                    msgBasica("combustivel " + saldoCombustivel);
-                    msgBasica("refeição " + saldoRefeicao);*/
-
-                Impressora.msgBasica("Falta implementar função");
-
+                /* OPÇÃO 3: Mostrar lista beneficiários cadastrados */
+                case '3':
+                    Impressora.subtitulo("Editar dados dos cartões de um beneficiário:");
+                    Impressora.msgBasica("Função ainda não implementada");
+                    break;
             }
 
-            /* OPÇÃO 3: Cadastrar novo beneficiário */
-            else if(operacao == '3'){
-                Impressora.msgBasica("\nCadastrar novo Beneficiário:");
-                cadastrarNovoBeneficiario();
-            }
+            Impressora.msgRedirecionamento("Voltando ao menu do Modo Administrador");
+            Impressora.linhaVazia();
+            Impressora.linhaSeparadoraDupla();
+            Impressora.diminuirIndentacao();
 
-            /* OPÇÃO 4: Mostrar lista beneficiários cadastrados */
-            else if(operacao == '4'){
-                Impressora.msgBasica("\nBeneficiários Cadastrados:");
-                visualizarBeneficiarios();
-            }
+        }while(opcao != 's');
 
-            /* OPÇÃO 5: Sair do Modo Administrador */
-            else if(operacao == 's'){
-                sair = true;
-            }
-
-            /* Avisar o usuário para onde ele vai agora */
-            if(sair == true){
-                Impressora.msgBasica("\nFechando o Modo Administrador...");
-            }
-            else{
-                Impressora.msgBasica("\nVoltando ao menu do Modo Administrador...");
-            }
-
-        }
+        /* Saindo do Modo Administrador */
+        Impressora.linhaVazia();
+        Impressora.msgRedirecionamento("Fechando o Modo Administrador");
+        Impressora.linhaVazia();
+        Impressora.linhaSeparadoraDupla();
 
     }
 

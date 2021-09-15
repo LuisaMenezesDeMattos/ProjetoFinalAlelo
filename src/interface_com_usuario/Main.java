@@ -14,14 +14,26 @@ public class Main {
 
         /* Início do Programa */
         Impressora.logomarca();
+        Impressora.linhaVazia();
         Impressora.titulo("Bem-vindo ao programa de gerenciamento de cartões da All Benefícios!");
 
+
         /* Configurações iniciais */
-        Impressora.linhaVazia();
         Impressora.msgBasica("Antes de iniciar, é necessário que sejam feitas as configurações do programa.");
-        Impressora.linhaVazia();
         if(modoAdministrador.tentarEntrar()){
+
+            /* Rodar configurações iniciais */
+            Impressora.linhaVazia();
+            Impressora.aumentarIndentacao();
             modoAdministrador.rodar();
+
+            /* Sair das configurações iniciais */
+            Impressora.diminuirIndentacao();
+            Impressora.linhaVazia();
+            Impressora.msgRedirecionamento("Saindo das configurações iniciais e abrindo o programa");
+            Impressora.linhaVazia();
+            Impressora.linhaSeparadoraDupla();
+
         }else{
             Impressora.msgAtencao("Como foi excedido o limite de tentativas, o programa será abortado");
             rodarPrograma = false;
@@ -34,13 +46,29 @@ public class Main {
             do{
 
                 /* Menu para escolher qual modo do programa deseja acessar */
-                Impressora.subtitulo("Escolha do Modo (Administrador | Beneficiário)");
+                Impressora.linhaVazia();
+                Impressora.titulo("Escolha do Modo (Administrador | Beneficiário)");
+                Impressora.linhaVazia();
                 Impressora.msgBasica("Deseja voltar ao Modo Administrador para alterar configurações do programa,");
                 Impressora.msgBasica("ou entrar no Modo Beneficiário para acessar o uso dos cartões?");
+                Impressora.linhaVazia();
+                Impressora.subtitulo("Menu de Escolha de Modo");
                 Impressora.msgOpcao('1', "Beneficiário");
                 Impressora.msgOpcao('2', "Administrador");
                 Impressora.msgOpcao('s', "Sair");
+                Impressora.linhaSeparadora();
+                Impressora.linhaVazia();
+                Impressora.msgBasica("Digite a opção desejada:");
                 opcaoModo = Leitor.lerOpcao(new char[]{'1', '2', 's'});
+
+                /* Organização e indentação */
+                if(opcaoModo == 's'){
+                    continue;
+                }else{
+                    Impressora.linhaVazia();
+                    Impressora.aumentarIndentacao();
+                    //Impressora.aumentarIndentacao();
+                }
 
                 /* Executar opção escolhida */
                 switch (opcaoModo){
@@ -84,8 +112,13 @@ public class Main {
             }while(opcaoModo != 's');
 
             /* Final do programa */
+            Impressora.linhaVazia();
             Impressora.msgRedirecionamento("Fechando o programa");
+            Impressora.linhaSeparadoraDupla();
+            Impressora.diminuirIndentacao();
+            Impressora.linhaVazia();
             Impressora.titulo("Obrigado por usar o programa de gerenciamento de cartões da All Benefícios!");
+            Impressora.logomarca();
 
         }
 

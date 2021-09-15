@@ -3,9 +3,16 @@ package dados;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/** ----------------------------------------------------------------- */
 /** CLASSE BENEFICIÁRIO
- * Autor: Rafael */
+ * Autor: Rafael
+ * Função: Guarda os dados de um determinado beneficiário cadastrado no sistema,
+ *          e executa as funções que um beneficiário deve poder executar
+ * */
 
+//todo
+    //Tirar os comentários
+    //Colar a versão final
 public class Beneficiario {
 
     /** ------------------------------------------------------------- */
@@ -25,7 +32,7 @@ public class Beneficiario {
     private int[] senha = new int[6];
     private String nomeChecar;
     private int[] senhaChecar;
-    private ArrayList<ICartaoBeneficio> listaCartoes;
+    private ArrayList<CartaoBeneficio> listaCartoes;
 
     // quando o beneficiário for criado (no construtor), devem ser criados
     // juntamente com ele os seus cartões
@@ -42,7 +49,10 @@ public class Beneficiario {
     public Beneficiario(String nome, int[] senha){
         this.nome = nome;
         this.senha = senha;
-        this.listaCartoes = listaCartoes;
+    }
+    public Beneficiario(String nome, int[] senha, ArrayList<CartaoBeneficio> listacartoes){
+        this(nome, senha);
+        this.listaCartoes = listacartoes;
     }
 
 

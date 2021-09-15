@@ -34,6 +34,8 @@ public class ModoBeneficiario {
 
     /** Método que lê um nome e uma senha, e tenta achar o beneficiário correspondente */
     private Beneficiario lerDadosEProcurarBeneficiario(ArrayList<Beneficiario> beneficiariosCadastrados){
+        Impressora.linhaVazia();
+        Impressora.subtitulo("Login do Beneficiário");
         Impressora.msgBasica("Nome: ");
         String nomeBeneficiario = Leitor.lerString();
         Impressora.msgBasica("Senha (6 dígitos): ");
@@ -237,6 +239,7 @@ public class ModoBeneficiario {
         do{
 
             /* Menu */
+            Impressora.subtitulo("Menu");
             Impressora.msgBasica("Deseja visualizar os dados de seus cartões, gerenciar um deles, ou fazer logoff?");
             Impressora.msgOpcao('1', "Visualizar Cartões");
             Impressora.msgOpcao('2', "Gerenciar um Cartão");
@@ -244,6 +247,8 @@ public class ModoBeneficiario {
             opcao = Leitor.lerOpcao(new char[]{'1', '2', 's'});
 
             /* Executar opção escolhida */
+            Impressora.linhaVazia();
+            Impressora.aumentarIndentacao();
             switch (opcao){
 
                 /* OPÇÃO #1: Visualizar os dados dos cartões */

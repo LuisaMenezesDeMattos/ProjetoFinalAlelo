@@ -1,6 +1,9 @@
 package dados;
 
 /** ------------------------------------------------------------- */
+
+import java.util.Date;
+
 /** CLASSE VALE_ALIMENTAÇÃO (do tipo CARTÃO_BENEFÍCIO) */
 
 public class ValeAlimentacao extends CartaoBeneficio {
@@ -14,6 +17,20 @@ public class ValeAlimentacao extends CartaoBeneficio {
     private static Double saldoDefault = 600.0;
     // no início do programa, é R$600.00
 
+
+    /** ------------------------------------------------------------- */
+    /** CONSTRUTORES */
+
+    public ValeAlimentacao() {
+    }
+
+    public ValeAlimentacao(int[] _senha) {
+        super(_senha);
+    }
+
+    public ValeAlimentacao(int[] _senha, Date _dataValidade) {
+        super(_senha, _dataValidade);
+    }
 
     /** ------------------------------------------------------------- */
     /** MÉTODOS */

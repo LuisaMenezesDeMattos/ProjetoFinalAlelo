@@ -1,6 +1,19 @@
 package dados;
 
+import java.util.Date;
+
 public class ValeRefeicao extends CartaoBeneficio{
+
+    public ValeRefeicao() {
+    }
+
+    public ValeRefeicao(int[] _senha) {
+        super(_senha);
+    }
+
+    public ValeRefeicao(int[] _senha, Date _dataValidade) {
+        super(_senha, _dataValidade);
+    }
 
     @Override
     public boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra) {

@@ -2,8 +2,16 @@ package dados;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
-public abstract class CartaoBeneficio implements ICartaoBeneficio {
+/** ----------------------------------------------------------------- */
+/** CLASSE ABSTRATA CARTÃO-BENEFÍCIO
+ * Autor: Sílvio
+ * Função: Declara as características e comportamentos em comum para todos
+ *          os cartões do sistema (vale-alimentação, vale-refeição, e vale-combustível)
+ * */
+
+public abstract class CartaoBeneficio {
 
     /** ------------------------------------------------------------- */
     /** ATRIBUTOS */
@@ -31,6 +39,19 @@ public abstract class CartaoBeneficio implements ICartaoBeneficio {
     protected static Double saldoDefault;
     // valor automático pro saldo de um novo cartão quando for criado
     // somente no modo administrador é possível configurar esse valor
+
+
+    /** ------------------------------------------------------------- */
+    /** CONSTRUTORES */
+
+    public CartaoBeneficio(){}
+    public CartaoBeneficio(int[] _senha){
+        this.senha = _senha;
+    }
+    public CartaoBeneficio(int[] _senha, Date _dataValidade){
+        this(_senha);
+        this.dataValidade = _dataValidade;
+    }
 
 
     /** ------------------------------------------------------------- */
@@ -80,6 +101,26 @@ public abstract class CartaoBeneficio implements ICartaoBeneficio {
     // recebe o estabelecimento e o valor, checa se a compra pode ser realizada, e realiza caso possa;
     // se realizou, retorna true; se o pagamento foi rejeitado, mostra a msgErro correspondente ao motivo
     // da rejeição, e então retorna false
+
+    /** Método estático que gera uma senha de cartão aleatória
+     * Autor: Luísa */
+    public static int[] gerarSenhaAleatoria(){
+        int[] senha = new int[4];
+        var gerador = new Random();
+        for(int i=0; i<4; i++){
+            senha[i] = gerador.nextInt(10);
+        }
+        return senha;
+    }
+
+    //todo
+    /** Método estático que calcula a data de validade */
+    public static Date calcularDataValidade(int meses){
+        return new Date(); /* retorno fictício */
+    }
+
+
+    public abstract TipoCartaoBeneficio tipo();
 
 
 }
