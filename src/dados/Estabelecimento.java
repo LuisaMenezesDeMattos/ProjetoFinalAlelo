@@ -2,6 +2,9 @@ package dados;
 
 
 /** ----------------------------------------------------------------- */
+
+import java.util.Locale;
+
 /** CLASSE ESTABELECIMENTO
  * Autor: Sandro
  * Função: Guarda os dados de um determinado estabelecimento cadastrado no sistema
@@ -21,11 +24,14 @@ public class Estabelecimento {
     /** ------------------------------------------------------------- */
     /** CONSTRUTOR */
 
-    public Estabelecimento(char[] codigo, String nome,Object TipoEstabelecimento , String endereco){
+    public Estabelecimento(char[] codigo, String nome, TipoEstabelecimento tipo, String endereco){
         this.codigo = codigo;
         this.nome = nome;
         this.TipoEstabelecimento = TipoEstabelecimento;
         this.endereco = endereco;
+    }
+    public Estabelecimento(String codigo, String nome, TipoEstabelecimento tipo, String endereco){
+        this(codigo.substring(0,3).toCharArray(), nome, tipo, endereco);
     }
 
 

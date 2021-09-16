@@ -231,7 +231,7 @@ public class ModoBeneficiario {
     public void rodar(){
 
         /* Título */
-        Impressora.titulo("Beneficiário " + beneficiarioLogado.getNome());
+        Impressora.subtitulo("Beneficiário " + beneficiarioLogado.getNome());
         Impressora.linhaVazia();
 
         /* Escolher e executar as opções */

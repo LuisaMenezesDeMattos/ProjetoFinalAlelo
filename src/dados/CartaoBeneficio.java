@@ -16,9 +16,6 @@ public abstract class CartaoBeneficio {
     /** ------------------------------------------------------------- */
     /** ATRIBUTOS */
 
-    protected final int[] codigo = new int[16];
-    //código do tipo 0000-0000-0000-0000
-
     protected int[] senha = new int[4];
     // a senha deve ser, obrigatoriamente, 4 dígitos numéricos
 
@@ -44,7 +41,6 @@ public abstract class CartaoBeneficio {
     /** ------------------------------------------------------------- */
     /** CONSTRUTORES */
 
-    public CartaoBeneficio(){}
     public CartaoBeneficio(int[] _senha){
         this.senha = _senha;
     }
@@ -57,12 +53,14 @@ public abstract class CartaoBeneficio {
     /** ------------------------------------------------------------- */
     /** MÉTODOS */
 
+    //todo
     /** Método que retorna os dados deste cartão em forma de texto */
     @Override
     public String toString(){
-        return ""; /* retorno fictício */
+        return "*dados cartão*"; /* retorno fictício */
     }
 
+    //todo
     /** Método que retorna o extrato deste cartão em forma de texto */
     public String extrato(){
 
@@ -75,6 +73,7 @@ public abstract class CartaoBeneficio {
 
     }
 
+    //todo
     /** Método que checa se uma dada senha é a correta */
     public boolean checarSenha(int[] senhaChecar){
 
@@ -85,17 +84,54 @@ public abstract class CartaoBeneficio {
 
     }
 
+
+    //todo
+    /** Método Sistema anti-fraude
+     * Autor: Sílvio */
+    public boolean sistemaAntiFraude(){
+
+        /**Tempo está recebendo valor 30 na variável representa o segundo**/
+        int tempo, segundos, minutos;
+
+        tempo=30;
+        /**Realizar o cálculo do minutos e segundos  **/
+        int tempEmSegundos = segundos = (tempo % 3600) % 60;
+        int tempEmMinutos =  minutos =  (tempo % 3600) / 60;
+
+        /**Verifica se valor da variável estar de acordo com validação**/
+        if(tempEmSegundos==30) {
+            System.out.println("Não devemos passar duas compras do mesmo valor no mesmo "
+                    + "estabelecimento em um período de:" + tempEmSegundos+ " segundos");
+            /** Se estiver mais de 1 minuto pode seguir com a comopra r**/
+        }if(tempEmMinutos >1){
+            System.out.println("Pode realizar a compra");
+        }
+
+        //todo
+        return true; /* retorno fictício */
+
+    }
+
+    //todo
     /** Método que checa se o cartão está vencido */
-    public boolean seVencido(){
+    public boolean seVencido(String dataFormatoBrasil , String dataValidadeCartao, String dataVencimentoCartao){
 
         // checa a data de hoje com a data de validade,
         // e retorna true caso o cartão esteja vencido,
         // ou false caso não
+        /**If que veirifica a validade do cartã, e faz a compração da String**/
+        if (dataValidadeCartao.compareTo(dataVencimentoCartao) < 0) {
+            System.out.println("Comrpra negada cartão está vencido");
+            System.out.println("Data da compra: "+ dataFormatoBrasil.format(dataVencimentoCartao));
+            System.out.println("Seu cartão venceu na seguiunte data:"+ dataFormatoBrasil.format(dataValidadeCartao));
+
+        }
 
         return true; /* retorno fictício */
 
     }
 
+    //todo
     /** Método que tenta realizar um pagamento neste cartão */
     public abstract boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra);
     // recebe o estabelecimento e o valor, checa se a compra pode ser realizada, e realiza caso possa;
@@ -119,8 +155,8 @@ public abstract class CartaoBeneficio {
         return new Date(); /* retorno fictício */
     }
 
-
-    public abstract TipoCartaoBeneficio tipo();
+    /** Método que retorna o tipo do cartão */
+    public abstract TipoCartaoBeneficio getTipo();
 
 
 }

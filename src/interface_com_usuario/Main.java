@@ -1,11 +1,16 @@
 package interface_com_usuario;
 
+import dados.Estabelecimento;
+import dados.TipoEstabelecimento;
+
 public class Main {
 
     /** ------------------------------------------------------------- */
     /** MÉTODO MAIN */
 
     public static void main(String[] args) {
+
+        var estabelecimentoTeste = new Estabelecimento(new char[]{}, "", TipoEstabelecimento.MERCADO, "");
 
         /* Variáveis locais */
         var modoAdministrador = new ModoAdministrador();
@@ -82,6 +87,9 @@ public class Main {
                         /* Tentar login como beneficiário */
                         if(modoBeneficiario.tentarLogin(modoAdministrador.listaBeneficiariosCadastrados)){
                             Impressora.msgRedirecionamento("Fazendo login");
+                            Impressora.linhaVazia();
+                            Impressora.linhaSeparadoraDupla();
+                            Impressora.linhaVazia();
                             modoBeneficiario.rodar();
                         }
 

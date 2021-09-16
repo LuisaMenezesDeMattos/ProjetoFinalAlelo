@@ -21,9 +21,6 @@ public class ValeAlimentacao extends CartaoBeneficio {
     /** ------------------------------------------------------------- */
     /** CONSTRUTORES */
 
-    public ValeAlimentacao() {
-    }
-
     public ValeAlimentacao(int[] _senha) {
         super(_senha);
     }

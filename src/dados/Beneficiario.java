@@ -120,7 +120,7 @@ public class Beneficiario {
 
     /** Método que retorna o nome do beneficiário */
     public String getNome(){
-        return ""; /* retorno fictício */
+        return "*nome beneficiário*"; /* retorno fictício */
     }
 
     /** Método que retorna o saldo de um dado cartão */

@@ -19,6 +19,18 @@ public class ModoAdministrador {
     /** ------------------------------------------------------------- */
     /** MÉTODOS PRIVADOS */
 
+    //todo: APAGAR ESSE MÉTODO!!!
+    private void hardCodeBeneficiarios(){
+        var senhaB = new int[]{1, 2, 3, 4, 5, 6};
+        var senhaC = new int[]{1, 2, 3, 4};
+        var cartoes = new ArrayList<CartaoBeneficio>();
+        cartoes.add(new ValeAlimentacao(senhaC));
+        cartoes.add(new ValeRefeicao(senhaC));
+        cartoes.add(new ValeCombustivel(senhaC));
+        var luisa = new Beneficiario("Luísa", senhaB, cartoes);
+        listaBeneficiariosCadastrados.add(luisa);
+    }
+
     private ArrayList<CartaoBeneficio> lerDadosCartoes(){
 
         var cartoesBeneficiario = new ArrayList<CartaoBeneficio>();
@@ -33,24 +45,18 @@ public class ModoAdministrador {
         TipoCartaoBeneficio[] tiposDeCartao = TipoCartaoBeneficio.values();
 
         if(opcao == 'a'){
-
-
-
             for (var tipoDeCartao: tiposDeCartao) {
                 var senhaGerada = CartaoBeneficio.gerarSenhaAleatoria();
                 senhas.put(tipoDeCartao, senhaGerada);
-                Impressora.msgSenha("Senha do " + tipoDeCartao.toString(), senhaGerada);
+                Impressora.msgSenha("Senha do " + tipoDeCartao.label(), senhaGerada);
             }
-
         }
-        else if(opcao == 'm'){
-
+        else{
             for (var tipoDeCartao: tiposDeCartao) {
-                var senhaGerada = Leitor.lerArrayDeInteiros(4);;
-                senhas.put(tipoDeCartao, senhaGerada);
-                Impressora.msgSenha("Senha do " + tipoDeCartao.toString(), senhaGerada);
+                Impressora.msgBasica("Senha do " + tipoDeCartao.label() + ":");
+                var senhaDada = Leitor.lerArrayDeInteiros(4);;
+                senhas.put(tipoDeCartao, senhaDada);
             }
-
         }
         Impressora.diminuirIndentacao();
 
@@ -61,35 +67,25 @@ public class ModoAdministrador {
         Impressora.aumentarIndentacao();
         if(opcao == 'p'){
             Impressora.msgAtencao("Validade dos 3 cartões definida para daqui 12 meses");
-
             for (var tipoDeCartao: tiposDeCartao) {
                 cartoesBeneficiario.add(tipoDeCartao.fabricar(senhas.get(tipoDeCartao)));
             }
             Impressora.diminuirIndentacao();
             return cartoesBeneficiario;
         }
-        else if(opcao == 'm'){
+        else{
             Impressora.msgBasica("Favor informar a validade, em meses, de cada cartão:");
             Impressora.msgBasica("   (Obs.: para cartões vencidos, digite uma quatidade negativa de meses)");
-
-
             for (var tipoDeCartao: tiposDeCartao) {
-                Impressora.msgBasica(tipoDeCartao.toString());
+                Impressora.msgBasica(tipoDeCartao.label());
                 Date dateValidade = CartaoBeneficio.calcularDataValidade(Leitor.lerInteiro());
                 cartoesBeneficiario.add(tipoDeCartao.fabricar(senhas.get(tipoDeCartao), dateValidade));
             }
-
-
             Impressora.diminuirIndentacao();
             return cartoesBeneficiario;
         }
-
-        Impressora.diminuirIndentacao();
-        return cartoesBeneficiario;
-
     }
 
-    //todo
     /** Método que lê dados no novo beneficiário, e o adiciona à listaUsuariosCadastrados */
     private void cadastrarNovoBeneficiario(){
 
@@ -104,19 +100,14 @@ public class ModoAdministrador {
 
     }
 
-    //todo
     /** Método que imprime a lista de beneficiários cadastrado em forma de texto */
     private void visualizarBeneficiarios(){
-
-        Impressora.msgBasica("Falta implementar função");
-
-        // imprime na tela o nome de todos os beneficiários em listaBeneficiariosCadastrados,
-        // e seus saldos de cada cartão, de forma amigável para leitura
-
-        // NÃO imprime as senhas, pois somente os beneficiários em si devem poder ver as próprias senhas
-
-        // utiliza o método toString() da classe Beneficiario
-
+        if(listaBeneficiariosCadastrados.size() == 0){
+            Impressora.msgAtencao("Não há nenhum beneficiário cadastrado ainda");
+        }
+        for(var beneficiario : listaBeneficiariosCadastrados){
+            Impressora.msgBasica(beneficiario.toString());
+        }
     }
 
 
@@ -160,6 +151,8 @@ public class ModoAdministrador {
     /** Método que roda as opções e a execução das opções de administrador
      * Autores: Rafael & Luísa */
     public void rodar(){
+
+        hardCodeBeneficiarios();
 
         /* Título */
         Impressora.titulo("Modo Administrador");

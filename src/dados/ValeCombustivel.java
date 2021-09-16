@@ -4,9 +4,6 @@ import java.util.Date;
 
 public class ValeCombustivel extends CartaoBeneficio {
 
-    public ValeCombustivel() {
-    }
-
     public ValeCombustivel(int[] _senha) {
         super(_senha);
     }
