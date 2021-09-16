@@ -2,6 +2,7 @@ package interface_com_usuario;
 
 import dados.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class ModoAdministrador {
@@ -83,7 +84,7 @@ public class ModoAdministrador {
             Impressora.msgBasica("   (Obs.: para cartões vencidos, digite uma quatidade negativa de meses)");
             for (var tipoDeCartao: tiposDeCartao) {
                 Impressora.msgBasica(tipoDeCartao.label());
-                Date dateValidade = CartaoBeneficio.calcularDataValidade(Leitor.lerInteiro());
+                var dateValidade = CartaoBeneficio.calcularDataValidade(Leitor.lerInteiro());
                 cartoesBeneficiario.add(tipoDeCartao.fabricar(senhas.get(tipoDeCartao), dateValidade));
             }
         }

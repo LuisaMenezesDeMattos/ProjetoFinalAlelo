@@ -1,9 +1,5 @@
 package dados;
 
-/** ------------------------------------------------------------- */
-
-import java.util.Date;
-
 /** CLASSE VALE_ALIMENTAÇÃO (do tipo CARTÃO_BENEFÍCIO) */
 
 public class ValeAlimentacao extends CartaoBeneficio {
@@ -12,10 +8,7 @@ public class ValeAlimentacao extends CartaoBeneficio {
     /** ATRIBUTOS */
 
     private static int validadeDefaultEmMeses = 12;
-    // no início do programa, é 12 meses
-
     private static Double saldoDefault = 600.0;
-    // no início do programa, é R$600.00
 
 
     /** ------------------------------------------------------------- */
@@ -25,13 +18,11 @@ public class ValeAlimentacao extends CartaoBeneficio {
         super(_senha);
     }
 
-    public ValeAlimentacao(char[] _senha, Date _dataValidade) {
-        super(_senha, _dataValidade);
-    }
 
     /** ------------------------------------------------------------- */
     /** MÉTODOS */
 
+    //todo
     /** Sobrescrita do método tentarPagamento da classe-pai */
     @Override
     public boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra) {
@@ -49,7 +40,7 @@ public class ValeAlimentacao extends CartaoBeneficio {
         return false;
     }
 
-
+    /** Sobrescrita do método que retorna o tipo do cartão */
     public TipoCartaoBeneficio getTipo() {
         return TipoCartaoBeneficio.VALE_ALIMENTACAO;
     }

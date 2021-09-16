@@ -1,5 +1,6 @@
 package dados;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public enum TipoCartaoBeneficio {
@@ -11,7 +12,7 @@ public enum TipoCartaoBeneficio {
         }
 
         @Override
-        public CartaoBeneficio fabricar(char[] senha, Date validade) {
+        public CartaoBeneficio fabricar(char[] senha, LocalDate validade) {
             return new ValeCombustivel(senha);
         }
 
@@ -27,7 +28,7 @@ public enum TipoCartaoBeneficio {
         }
 
         @Override
-        public CartaoBeneficio fabricar(char[] senha, Date validade) {
+        public CartaoBeneficio fabricar(char[] senha, LocalDate validade) {
             return new ValeCombustivel(senha);
         }
 
@@ -43,7 +44,7 @@ public enum TipoCartaoBeneficio {
         }
 
         @Override
-        public CartaoBeneficio fabricar(char[] senha, Date validade) {
+        public CartaoBeneficio fabricar(char[] senha, LocalDate validade) {
             return new ValeCombustivel(senha);
         }
 
@@ -54,7 +55,7 @@ public enum TipoCartaoBeneficio {
     };
 
     public abstract CartaoBeneficio fabricar(char[] senha);
-    public abstract CartaoBeneficio fabricar(char[] senha, Date validade);
+    public abstract CartaoBeneficio fabricar(char[] senha, LocalDate validade);
 
     public abstract String label();
 

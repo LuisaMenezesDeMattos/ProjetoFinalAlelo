@@ -1,17 +1,29 @@
 package dados;
 
-import java.util.Date;
+/** CLASSE VALE_REFEIÇÃO (do tipo CARTÃO_BENEFÍCIO) */
 
 public class ValeRefeicao extends CartaoBeneficio{
+
+    /** ------------------------------------------------------------- */
+    /** ATRIBUTOS */
+
+    private static int validadeDefaultEmMeses = 12;
+    private static Double saldoDefault = 200.0;
+
+
+    /** ------------------------------------------------------------- */
+    /** CONSTRUTORES */
 
     public ValeRefeicao(char[] _senha) {
         super(_senha);
     }
 
-    public ValeRefeicao(char[] _senha, Date _dataValidade) {
-        super(_senha, _dataValidade);
-    }
 
+    /** ------------------------------------------------------------- */
+    /** MÉTODOS */
+
+    //todo
+    /** Sobrescrita do método tentarPagamento da classe-pai */
     @Override
     public boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra) {
 
@@ -27,6 +39,7 @@ public class ValeRefeicao extends CartaoBeneficio{
         return false;
     }
 
+    /** Sobrescrita do método que retorna o tipo do cartão */
     @Override
     public TipoCartaoBeneficio getTipo() {
         return TipoCartaoBeneficio.VALE_REFEICAO;

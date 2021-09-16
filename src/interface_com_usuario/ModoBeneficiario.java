@@ -5,6 +5,7 @@ import dados.Estabelecimento;
 import dados.TipoCartaoBeneficio;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ModoBeneficiario {
 
@@ -23,7 +24,7 @@ public class ModoBeneficiario {
 
 
     /** ------------------------------------------------------------- */
-    /** MÉTODOS PRIVADOS DE APOIO */
+    /** MÉTODOS ESTÁTICOS */
 
     /** Método que lê um nome e uma senha, e tenta achar o beneficiário correspondente */
     private static Beneficiario lerDadosEProcurarBeneficiario(){
@@ -34,6 +35,16 @@ public class ModoBeneficiario {
         Impressora.msgBasica("Senha (6 dígitos): ");
         char[] senhaBeneficiario = Leitor.lerArrayDeDigitos(6);
         return ModoAdministrador.checarDadosLoginBeneficiario(nomeBeneficiario, senhaBeneficiario);
+    }
+
+    /** Método que recebe um código e retorna o estabelecimento relativo, caso haja */
+    public static Estabelecimento buscaEstabelecimento(char[] codigo){
+        for(var estabelecimento : listaEstabelecimentosCadastrados){
+            if(Arrays.equals(estabelecimento.getCodigo(), codigo)){
+                return estabelecimento;
+            }
+        }
+        return null;
     }
 
 

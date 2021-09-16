@@ -1,5 +1,8 @@
 package dados;
 
+import interface_com_usuario.ModoBeneficiario;
+
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.time.LocalDateTime;
 
@@ -16,75 +19,59 @@ public class Transacao {
     /** ATRIBUTOS */
 
     private double valor;
-    private String data;
-    private char[] estabelecimento;
+    private char[] codigoEstabelecimento;
     private LocalDateTime dataHoraTransacao;
 
 
     /** ------------------------------------------------------------- */
     /** CONSTRUTORES */
 
-    public Transacao(double valorInicial, String dataInicial, char[] estabelecimento,  LocalDateTime dataHoraTransacao) {
-        this.valor = valorInicial;
-        this.data = dataInicial;
-        this.estabelecimento = estabelecimento;
-        this.dataHoraTransacao = dataHoraTransacao;
+    public Transacao(double _valor, char[] _codigoEstabelecimento) {
+        this.valor = _valor;
+        this.codigoEstabelecimento = _codigoEstabelecimento;
+        this.dataHoraTransacao = LocalDateTime.now();
+    }
+    public Transacao(double _valor, Estabelecimento _estabelecimento) {
+        this(_valor, _estabelecimento.getCodigo());
     }
 
-    public Transacao(double valor) {
-        this.valor = valor;
-    }
-
-    public Transacao(char[] estabelecimento) {
-        this.estabelecimento = estabelecimento;
-    }
-
-    public Transacao(String data) {
-        this.data = data;
-    }
 
 
     /** ------------------------------------------------------------- */
     /** MÉTODOS */
 
     public double getValor() {
-        return valor;
+        return this.valor;
     }
 
-    public String getData() {
-        return data;
+    public boolean isValor(double valorChecar){
+        return (valorChecar == this.valor);
+    }
+
+    public boolean isEstabelecimento(Estabelecimento estabelecimentoChecar){
+        return (Arrays.equals(estabelecimentoChecar.getCodigo(), this.codigoEstabelecimento));
     }
 
     public char[] getEstabelecimento() {
-        return estabelecimento;
+        return this.codigoEstabelecimento;
     }
 
     public LocalDateTime getDataHoraTransacao() {
-        return dataHoraTransacao;
+        return this.dataHoraTransacao;
     }
-
-    /*public void setValor(double valor) {
-        this.valor = valor;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public void setEstabelecimento(char[] estabelecimento) {
-        this.estabelecimento = estabelecimento;
-    }
-
-    public void setDataHoraTransacao(LocalDateTime dataHoraTransacao) {
-        this.dataHoraTransacao = dataHoraTransacao;
-    }*/
 
     @Override
     public String toString() {
-        return "Transacao{" +
-                "valor=" + valor +
-                ", data='" + data + '\'' +
-                ", char[]='" + Arrays.toString(estabelecimento) + '\'' +
-                '}';
+        String retorno = "";
+        retorno += this.dataHoraTransacao + ": ";
+        retorno += CartaoBeneficio.formataReais(this.valor) + " - ";
+        retorno += ModoBeneficiario.buscaEstabelecimento(this.codigoEstabelecimento).getNome();
+        return retorno;
     }
+
+    public int segundosDesdeTransacao(){
+        var horaAgora = LocalDateTime.now();
+        return (int) ChronoUnit.SECONDS.between(this.dataHoraTransacao, horaAgora);
+    }
+
 }

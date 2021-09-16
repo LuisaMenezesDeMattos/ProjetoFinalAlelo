@@ -1,13 +1,14 @@
 package dados;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 /** ----------------------------------------------------------------- */
 /** CLASSE ABSTRATA CARTÃO-BENEFÍCIO
- * Autor: Sílvio
  * Função: Declara as características e comportamentos em comum para todos
  *          os cartões do sistema (vale-alimentação, vale-refeição, e vale-combustível)
  * */
@@ -23,7 +24,7 @@ public abstract class CartaoBeneficio {
     protected Double saldo;
     // lembrando que não pode ser negativo
 
-    protected Date dataValidade;
+    protected LocalDate dataValidade;
     // lembrando que não pode efetuar a compra com um cartão vencido
 
     protected ArrayList<Transacao> listaTransacoes = new ArrayList<Transacao>();
@@ -32,11 +33,9 @@ public abstract class CartaoBeneficio {
 
     protected static int validadeDefaultEmMeses;
     // meses para o cálculo da validade de um cartão quando ele for criado
-    // somente no modo administrador é possível configurar esse valor
 
     protected static Double saldoDefault;
     // valor automático pro saldo de um novo cartão quando for criado
-    // somente no modo administrador é possível configurar esse valor
 
 
     /** ------------------------------------------------------------- */
@@ -44,10 +43,80 @@ public abstract class CartaoBeneficio {
 
     public CartaoBeneficio(char[] _senha){
         this.senha = _senha;
+        this.saldo = saldoDefault;
+        this.dataValidade = calcularDataValidade(validadeDefaultEmMeses);
     }
-    public CartaoBeneficio(char[] _senha, Date _dataValidade){
+    public CartaoBeneficio(char[] _senha, LocalDate _dataValidade){
         this(_senha);
         this.dataValidade = _dataValidade;
+    }
+
+
+    /** ------------------------------------------------------------- */
+    /** MÉTODOS ESTÁTICOS */
+
+    /** Método estático que gera uma senha de cartão aleatória */
+    public static char[] gerarSenhaAleatoria(){
+        char[] senha = new char[4];
+        var gerador = new Random();
+        for(int i=0; i<4; i++){
+            senha[i] = (gerador.nextInt(10) + "").charAt(0);
+        }
+        return senha;
+    }
+
+    /** Método estático que calcula a data de validade */
+    public static LocalDate calcularDataValidade(int meses){
+        return LocalDate.now().plusMonths(meses);
+    }
+
+    /** Método estático que formata um valor em reais */
+    public static String formataReais(double valor){
+        return new DecimalFormat("'R$'.00").format(valor);
+    }
+
+
+    /** ------------------------------------------------------------- */
+    /** MÉTODOS PROTEGIDOS */
+
+    /** Método que checa se o cartão está vencido */
+    protected boolean seVencido(){
+        if(this.dataValidade.isBefore(LocalDate.now())){
+            return true;
+        }
+        return false;
+    }
+
+    /** Método que checa a hora para fazer o teste anti-fraude, retornando true se passar e false se falhar */
+    protected boolean tentarPassarNoAntiFraude(double valorCompra, Estabelecimento estabelecimento){
+
+        // Se não há transações cadastradas ainda, não precisa fazer nenhum teste
+        int qtdTransacoes = listaTransacoes.size();
+        if(qtdTransacoes == 0){
+            return true;
+        }
+
+        // Comparar essa compra com a transação mais recente
+        // (Não devemos passar duas compras do mesmo valor no mesmo estabelecimento em um período de 30 segundos)
+        var ultimaTransacao = listaTransacoes.get(qtdTransacoes-1);
+        if(ultimaTransacao.isValor(valorCompra) && ultimaTransacao.isEstabelecimento(estabelecimento)){
+            if(ultimaTransacao.segundosDesdeTransacao() <= 30){
+                return false;
+            }
+        }
+
+        // Comparar a hora de agora com a hora da penúltima transação
+        // (Não devemos passar três compras no mesmo cartão dentro do mesmo minuto.)
+        if(qtdTransacoes > 1){
+            var penultimaTransacao = listaTransacoes.get(qtdTransacoes-2);
+            if(penultimaTransacao.segundosDesdeTransacao() <= 60){
+                return false;
+            }
+        }
+
+        // Passou nos testes
+        return true;
+
     }
 
 
@@ -67,104 +136,30 @@ public abstract class CartaoBeneficio {
         return formataReais(this.saldo);
     }
 
-    //todo
     /** Método que retorna o extrato deste cartão em forma de texto */
     public String extrato(){
 
-        // retorna os dados de:
-        //   > listaTransacoes
-        //   > saldo
-        // de forma amigável para leitura
+        if(listaTransacoes.size() == 0){
+            return "Não há histórico de transações neste cartão ainda";
+        }
 
-        return ""; /* retorno fictício */
+        String retorno = "";
+        retorno += "Saldo: " + getSaldo();
+        retorno += "\nTransações:";
+        for(var transacao : listaTransacoes){
+            retorno += "\n" + transacao;
+        }
+        return retorno;
 
     }
 
-    //todo
     /** Método que checa se uma dada senha é a correta */
-    public boolean checarSenha(int[] senhaChecar){
-
-        // recebe uma senha, e retorna true caso seja igual à senha deste cartão,
-        // mas false caso não seja
-
-        return true; /* retorno fictício */
-
+    public boolean checarSenha(char[] senhaChecar){
+        return (Arrays.equals(senhaChecar, this.senha));
     }
 
-
-    //todo
-    /** Método Sistema anti-fraude
-     * Autor: Sílvio */
-    public boolean sistemaAntiFraude(){
-
-        /**Tempo está recebendo valor 30 na variável representa o segundo**/
-        int tempo, segundos, minutos;
-
-        tempo=30;
-        /**Realizar o cálculo do minutos e segundos  **/
-        int tempEmSegundos = segundos = (tempo % 3600) % 60;
-        int tempEmMinutos =  minutos =  (tempo % 3600) / 60;
-
-        /**Verifica se valor da variável estar de acordo com validação**/
-        if(tempEmSegundos==30) {
-            System.out.println("Não devemos passar duas compras do mesmo valor no mesmo "
-                    + "estabelecimento em um período de:" + tempEmSegundos+ " segundos");
-            /** Se estiver mais de 1 minuto pode seguir com a comopra r**/
-        }if(tempEmMinutos >1){
-            System.out.println("Pode realizar a compra");
-        }
-
-        return true; /* retorno fictício */
-
-    }
-
-    //todo
-    /** Método que checa se o cartão está vencido */
-    public boolean seVencido(String dataFormatoBrasil , String dataValidadeCartao, String dataVencimentoCartao){
-
-        // checa a data de hoje com a data de validade,
-        // e retorna true caso o cartão esteja vencido,
-        // ou false caso não
-        /**If que veirifica a validade do cartã, e faz a compração da String**/
-        if (dataValidadeCartao.compareTo(dataVencimentoCartao) < 0) {
-            System.out.println("Comrpra negada cartão está vencido");
-            System.out.println("Data da compra: "+ dataFormatoBrasil.format(dataVencimentoCartao));
-            System.out.println("Seu cartão venceu na seguiunte data:"+ dataFormatoBrasil.format(dataValidadeCartao));
-
-        }
-
-        return true; /* retorno fictício */
-
-    }
-
-    //todo
     /** Método que tenta realizar um pagamento neste cartão */
     public abstract boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra);
-    // recebe o estabelecimento e o valor, checa se a compra pode ser realizada, e realiza caso possa;
-    // se realizou, retorna true; se o pagamento foi rejeitado, mostra a msgErro correspondente ao motivo
-    // da rejeição, e então retorna false
-
-    /** Método estático que gera uma senha de cartão aleatória
-     * Autor: Luísa */
-    public static char[] gerarSenhaAleatoria(){
-        char[] senha = new char[4];
-        var gerador = new Random();
-        for(int i=0; i<4; i++){
-            senha[i] = (gerador.nextInt(10) + "").charAt(0);
-        }
-        return senha;
-    }
-
-    //todo
-    /** Método estático que calcula a data de validade */
-    public static Date calcularDataValidade(int meses){
-        return new Date(); /* retorno fictício */
-    }
-
-    /** Método estático que formata um valor em reais */
-    public static String formataReais(double valor){
-        return new DecimalFormat("'R$'.00").format(valor);
-    }
 
     /** Método que retorna o tipo do cartão */
     public abstract TipoCartaoBeneficio getTipo();
