@@ -6,12 +6,12 @@ public enum TipoCartaoBeneficio {
 
     VALE_ALIMENTACAO {
         @Override
-        public CartaoBeneficio fabricar(int[] senha) {
+        public CartaoBeneficio fabricar(char[] senha) {
             return new ValeAlimentacao(senha);
         }
 
         @Override
-        public CartaoBeneficio fabricar(int[] senha, Date validade) {
+        public CartaoBeneficio fabricar(char[] senha, Date validade) {
             return new ValeCombustivel(senha);
         }
 
@@ -22,12 +22,12 @@ public enum TipoCartaoBeneficio {
     },
     VALE_REFEICAO {
         @Override
-        public CartaoBeneficio fabricar(int[] senha) {
+        public CartaoBeneficio fabricar(char[] senha) {
             return new ValeRefeicao(senha);
         }
 
         @Override
-        public CartaoBeneficio fabricar(int[] senha, Date validade) {
+        public CartaoBeneficio fabricar(char[] senha, Date validade) {
             return new ValeCombustivel(senha);
         }
 
@@ -38,12 +38,12 @@ public enum TipoCartaoBeneficio {
     },
     VALE_COMBUSTIVEL {
         @Override
-        public CartaoBeneficio fabricar(int[] senha) {
+        public CartaoBeneficio fabricar(char[] senha) {
             return new ValeCombustivel(senha);
         }
 
         @Override
-        public CartaoBeneficio fabricar(int[] senha, Date validade) {
+        public CartaoBeneficio fabricar(char[] senha, Date validade) {
             return new ValeCombustivel(senha);
         }
 
@@ -53,8 +53,8 @@ public enum TipoCartaoBeneficio {
         }
     };
 
-    public abstract CartaoBeneficio fabricar(int[] senha);
-    public abstract CartaoBeneficio fabricar(int[] senha, Date validade);
+    public abstract CartaoBeneficio fabricar(char[] senha);
+    public abstract CartaoBeneficio fabricar(char[] senha, Date validade);
 
     public abstract String label();
 

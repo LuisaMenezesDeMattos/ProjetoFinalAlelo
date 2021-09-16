@@ -161,17 +161,13 @@ public class Leitor {
     }
 
     /** Lê um array de inteiros de um tamanho específico */
-    public static int[] lerArrayDeInteiros(int tamanhoArray){
-        String leituraString = lerString();
-        while(!checarDigitos(leituraString) || leituraString.length() != tamanhoArray){
+    public static char[] lerArrayDeDigitos(int tamanhoArray){
+        String leitura = lerString();
+        while(!checarDigitos(leitura) || leitura.length() != tamanhoArray){
             Impressora.msgAtencao("Digite apenas a quantidade pedida de dígitos numéricos; sem espaços, traços ou letras");
-            leituraString = lerString();
+            leitura = lerString();
         }
-        int[] leitura = new int[tamanhoArray];
-        for(int i=0; i<tamanhoArray; i++){
-            leitura[i] = Integer.parseInt(leituraString.charAt(i) + "");
-        }
-        return leitura;
+        return leitura.toCharArray();
     }
 
 }

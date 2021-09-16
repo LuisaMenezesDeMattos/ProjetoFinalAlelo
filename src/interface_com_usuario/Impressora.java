@@ -126,7 +126,7 @@ public class Impressora {
     }
 
     /** Imprime uma senha na tela */
-    public static void msgSenha(String label, int[] senha){
+    public static void msgSenha(String label, char[] senha){
         String senhaString = "";
         for(int i=0; i<senha.length; i++){
             senhaString += senha[i];

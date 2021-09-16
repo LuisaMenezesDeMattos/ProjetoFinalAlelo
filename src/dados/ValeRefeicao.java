@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class ValeRefeicao extends CartaoBeneficio{
 
-    public ValeRefeicao(int[] _senha) {
+    public ValeRefeicao(char[] _senha) {
         super(_senha);
     }
 
-    public ValeRefeicao(int[] _senha, Date _dataValidade) {
+    public ValeRefeicao(char[] _senha, Date _dataValidade) {
         super(_senha, _dataValidade);
     }
 

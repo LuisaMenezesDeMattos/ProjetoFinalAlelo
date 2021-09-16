@@ -10,28 +10,16 @@ import java.util.Objects;
  *          e executa as funções que um beneficiário deve poder executar
  * */
 
-//todo
-    //Tirar os comentários
-    //Colar a versão final
+
 public class Beneficiario {
 
     /** ------------------------------------------------------------- */
-    /** ATRIBUTOS */
+    /**
+     * ATRIBUTOS
+     */
 
-    /*private final String nome;
-    // o programa presume que não há dois beneficiários com o mesmo nome
-
-    private int[] senha = new int[6];
-    // a senha deve ser, obrigatoriamente, 6 dígitos numéricos
-
-    private ArrayList<ICartaoBeneficio> listaCartoes;
-    // quando o beneficiário for criado (no construtor), devem ser criados
-    // juntamente com ele os seus cartões*/
-
-    public String nome;
-    private int[] senha = new int[6];
-    private String nomeChecar;
-    private int[] senhaChecar;
+    private String nome;
+    private char[] senha = new char[6];
     private ArrayList<CartaoBeneficio> listaCartoes;
 
     // quando o beneficiário for criado (no construtor), devem ser criados
@@ -39,116 +27,149 @@ public class Beneficiario {
 
 
     /** ------------------------------------------------------------- */
-    /** CONSTRUTOR */
+    /**
+     * CONSTRUTOR
+     */
 
-    /*public Beneficiario(String _nome){
-        this.nome = _nome; // obrigatório pois o nome é do tipo final
-        // falta incluir a senha e os cartões no construtor
-    }*/
-
-    public Beneficiario(String nome, int[] senha){
+    public Beneficiario(String nome, char[] senha, ArrayList<CartaoBeneficio> listaCartoes) {
         this.nome = nome;
         this.senha = senha;
-    }
-    public Beneficiario(String nome, int[] senha, ArrayList<CartaoBeneficio> listacartoes){
-        this(nome, senha);
-        this.listaCartoes = listacartoes;
+        this.listaCartoes = listaCartoes;
     }
 
 
     /** ------------------------------------------------------------- */
     /** MÉTODOS */
 
-    /** Método que checa os dados deste beneficiário */
-    public boolean checarDadosLogin(String nomeChecar, int[] senhaChecar){
+    /**
+     * Método que checa os dados deste beneficiário
+     */
+    public boolean checarDadosLogin(String nomeChecar, char[] senhaChecar) {
+        boolean nomeCorreto = this.nome.equals(nomeChecar);
+        boolean senhaCorreta = true;
+        if(this.senha.length != senhaChecar.length){
+            senhaCorreta  = false;
+        }else{
+            for(int i=0; i<senhaChecar.length; i++){
+                if(this.senha[i] != senhaChecar[i]){
+                    senhaCorreta = false;
+                    break;
+                }
+            }
+        }
 
-        /*
-        // recebe um nome e uma senha, e retorna true caso sejam iguais aos nome e senha
-        // deste beneficiário, ou false caso não sejam
-
-        return true; // retorno fictício
-        */
-
-        Objects.equals(this.nomeChecar, nome);
-        Objects.equals(this.senhaChecar, senha);
-
-        return true;
+        if (nomeCorreto == false || senhaCorreta == false) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
-    /** Método que retorna os dados deste beneficiário como String */
+    /**
+     * Método que retorna os dados deste beneficiário como String
+     */
     @Override
-    public String toString(){
+    public String toString() {
+        return "Beneficiario:\n" +
+                "nome:" + nome + "\n" +
+                "Lista de Cartões:\n" + listaCartoes;
+    }
 
-        /*
-        // retorna os dados do beneficiário:
-        //   > nome
-        //   > saldos dos cartões
-        // de forma amigável para leitura
 
-        // (NÃO retorna as senhas)
+    /**
+     * Método que tenta usar o cartão, e retorna true caso dê certo, ou false caso não
+     */
+    public boolean tentarPassarCartao(TipoCartaoBeneficio tipo, Double valor, Estabelecimento estabelecimento) {
 
-        return ""; // retorno fictício
-         */
+        for(var cartao : listaCartoes) {
+            boolean b = cartao.getTipo() == tipo;
 
-        return "Beneficiario{" +
-                "nome='" + nome + '\'' +
-                ", listaCartoes=" + listaCartoes +
-                '}';
+            if(b) {
+                return cartao.tentarPagamento(estabelecimento,valor);
+            }
+        }
+
+        return false;
 
     }
 
-    /** Método que tenta usar o cartão, e retorna true caso dê certo, ou false caso não */
-    public boolean tentarPassarCartao(TipoCartaoBeneficio tipoCartao, Double valor, Estabelecimento estabelecimento){
+    /**
+     * Método que recebe um tipo de cartão, e retorna os dados do mesmo
+     */
+    public String extratoCartao(TipoCartaoBeneficio tipo) {
 
-        // recebe o tipo do cartão, o valor a ser gasto, e o estabelecimento.
-        // então busca o cartão do tipo passado na listaCartoes,
-        // e retorna o seu método tentarPagamento(estabelecimento, valor);
+        for(var cartao : listaCartoes){
+            boolean b = cartao.getTipo() == tipo;
 
-        return true; /* retorno fictício */
+            if(b) {
+                return cartao.extrato();
+            }
 
-    }
+        }
 
-    /** Método que recebe um tipo de cartão, e retorna os dados do mesmo */
-    public String extratoCartao(TipoCartaoBeneficio tipo){
-
-        // recebe o tipo do cartão, busca o cartão do tipo passado em listaCartoes,
-        // e retorna o seu método extrato();
-
-        return ""; /* retorno fictício */
-
+        return "";
     }
 
     /** Método que retorna o nome do beneficiário */
-    public String getNome(){
-        return "*nome beneficiário*"; /* retorno fictício */
+
+    public String getNome() {
+        return nome;
     }
 
     /** Método que retorna o saldo de um dado cartão */
-    public String getSaldoCartao(TipoCartaoBeneficio tipoCartao){
-        return "R$00,00"; /* retorno fictício */
+    public String getSaldoCartao (TipoCartaoBeneficio tipo){
+        for(var cartao : listaCartoes) {
+            boolean b = cartao.getTipo() == tipo;
+
+            if(b) {
+                return cartao.getSaldo();
+            }
+        }
+
+        return "";
+
     }
-
-
 
 
     /** Método que retorna se uma dada senha corresponde ao um dado cartão */
-    public boolean checarSenhaCartao(int[] senha, TipoCartaoBeneficio tipoCartao){
+    public boolean checarSenhaCartao (char[] senhaChecar, TipoCartaoBeneficio tipo){
 
-        // recebe o tipo do cartão, busca o cartão do tipo passado em listaCartoes,
-        // e testa se a senha passada é a deste cartão
+        for(var cartao : listaCartoes) {
+            boolean b = cartao.getTipo() == tipo;
 
-        return true; /* retorno fictício */
+            if(b) {
+
+                boolean senhaCorreta = true;
+                if(cartao.senha.length != senhaChecar.length){
+                    senhaCorreta  = false;
+                }else{
+                    for(int i=0; i<senhaChecar.length; i++){
+                        if(cartao.senha[i] != senhaChecar[i]){
+                            senhaCorreta = false;
+                            break;
+                        }
+                    }
+                }
+                return senhaCorreta;
+            }
+
+        }
+
+        return false;
+
     }
-
-
-
 
 
     /** Método que retorna os dados de cada cartão */
-    public String dadosCartoes(){
+    public String dadosCartoes () {
 
-        return ""; /* retorno fictício */
+        String retorno = "";
+
+        for(var cartao : listaCartoes){
+            retorno = retorno + cartao.toString()+"\n";
+        }
+
+
+        return retorno;
     }
-
-
 }

@@ -11,41 +11,29 @@ public class ModoBeneficiario {
     /** ------------------------------------------------------------- */
     /** ATRIBUTOS */
 
-    private Beneficiario beneficiarioLogado;
-    private ArrayList<Estabelecimento> listaEstabelecimentosCadastrados;
+    private static Beneficiario beneficiarioLogado;
+    private static ArrayList<Estabelecimento> listaEstabelecimentosCadastrados = new ArrayList<>();
 
 
     /** ------------------------------------------------------------- */
-    /** CONSTRUTOR */
+    /** CONSTRUTOR DE CLASSE ESTÁTICA */
 
-    //todo
-    public ModoBeneficiario(){
-
-        listaEstabelecimentosCadastrados = new ArrayList<>();
-        // Colocar como hard-coded alguns estabelecimentos automáticos
-        // não fazer mais de 9
-
+    private ModoBeneficiario(){
     }
 
 
     /** ------------------------------------------------------------- */
     /** MÉTODOS PRIVADOS DE APOIO */
 
-
     /** Método que lê um nome e uma senha, e tenta achar o beneficiário correspondente */
-    private Beneficiario lerDadosEProcurarBeneficiario(ArrayList<Beneficiario> beneficiariosCadastrados){
+    private static Beneficiario lerDadosEProcurarBeneficiario(){
         Impressora.linhaVazia();
         Impressora.subtitulo("Login do Beneficiário");
         Impressora.msgBasica("Nome: ");
         String nomeBeneficiario = Leitor.lerString();
         Impressora.msgBasica("Senha (6 dígitos): ");
-        int[] senhaBeneficiario = Leitor.lerArrayDeInteiros(6);
-        for(var beneficiario : beneficiariosCadastrados){
-            if(beneficiario.checarDadosLogin(nomeBeneficiario, senhaBeneficiario)){
-                return beneficiario;
-            }
-        }
-        return null;
+        char[] senhaBeneficiario = Leitor.lerArrayDeDigitos(6);
+        return ModoAdministrador.checarDadosLoginBeneficiario(nomeBeneficiario, senhaBeneficiario);
     }
 
 
@@ -53,7 +41,7 @@ public class ModoBeneficiario {
     /** MÉTODOS PRIVADOS QUE EXECUTAM AS OPÇÕES DO USUÁRIO */
 
     /** Método que roda o 2º menu do Modo Beneficiário: Menu de escolha de cartão */
-    private void rodarEscolhaCartao(){
+    private static void rodarEscolhaCartao(){
 
         char opcao;
         do{
@@ -99,7 +87,7 @@ public class ModoBeneficiario {
     }
 
     /** Método que roda o 3º menu do Modo Beneficiário: Menu de opções de um cartão */
-    private void rodarGerenciamentoCartao(TipoCartaoBeneficio tipoCartao){
+    private static void rodarGerenciamentoCartao(TipoCartaoBeneficio tipoCartao){
 
         char opcao;
         do{
@@ -137,18 +125,18 @@ public class ModoBeneficiario {
     }
 
     /** Método que roda o tratamento do uso de um cartão */
-    private void rodarPassarCartao(TipoCartaoBeneficio tipoCartao){
+    private static void rodarPassarCartao(TipoCartaoBeneficio tipoCartao){
 
         /* Primeiro, pedir a senha do cartão */
         Impressora.msgBasica("Digite a senha do cartão para acessá-lo (4 dígitos):");
-        int[] senha = Leitor.lerArrayDeInteiros(4);
+        char[] senha = Leitor.lerArrayDeDigitos(4);
         while(!beneficiarioLogado.checarSenhaCartao(senha, tipoCartao)){
             Impressora.msgAtencao("Senha incorreta");
             Impressora.msgBasica("Deseja tentar novamente? ('s' - sim | 'n' - não)");
             char tentarNovamente = Leitor.lerOpcao(new char[]{'s', 'n'});
             if(tentarNovamente == 's'){
                 Impressora.msgBasica("Digite a senha do cartão para acessá-lo (4 dígitos):");
-                senha = Leitor.lerArrayDeInteiros(4);
+                senha = Leitor.lerArrayDeDigitos(4);
             }else{
                 return;
             }
@@ -199,27 +187,27 @@ public class ModoBeneficiario {
     /** ------------------------------------------------------------- */
     /** MÉTODOS PÚBLICOS */
 
-    /** Método que recebe a lista de beneficiários cadastrados, e tenta fazer login como um deles,
+    /** Método que r tenta fazer login como um dos beneficiários cadastrados em ModoAdministrador,
      * retornando true caso o login ocorra, ou false caso não */
-    public boolean tentarLogin(ArrayList<Beneficiario> beneficiariosCadastrados){
+    public static boolean tentarLogin(){
 
-        this.beneficiarioLogado = lerDadosEProcurarBeneficiario(beneficiariosCadastrados);
+        beneficiarioLogado = lerDadosEProcurarBeneficiario();
         boolean tentarNovamente = true;
-        while (this.beneficiarioLogado == null && tentarNovamente) {
+        while (beneficiarioLogado == null && tentarNovamente) {
             Impressora.msgAtencao("Dados incorretos");
             Impressora.msgBasica("Deseja tentar novamente, ou voltar ao menu anterior?");
             Impressora.msgBasica("'t' - Tentar  |  'v' - Voltar");
             char flag = Leitor.lerOpcao(new char[]{'t', 'v'});
             if (flag == 't') {
                 Impressora.msgBasica("\nNova tentativa:");
-                this.beneficiarioLogado = lerDadosEProcurarBeneficiario(beneficiariosCadastrados);
+                beneficiarioLogado = lerDadosEProcurarBeneficiario();
             }
             else{
                 tentarNovamente = false;
                 Impressora.msgRedirecionamento("Voltando");
             }
         }
-        if(this.beneficiarioLogado != null){
+        if(beneficiarioLogado != null){
             Impressora.msgAtencao("Dados corretos");
             return true;
         }
@@ -228,10 +216,10 @@ public class ModoBeneficiario {
     }
 
     /** Método que roda o menu principal do Modo Beneficiário */
-    public void rodar(){
+    public static void rodar(){
 
         /* Título */
-        Impressora.subtitulo("Beneficiário " + beneficiarioLogado.getNome());
+        Impressora.subtitulo("Beneficiário: " + beneficiarioLogado.getNome());
         Impressora.linhaVazia();
 
         /* Escolher e executar as opções */

@@ -13,8 +13,8 @@ public class Main {
         var estabelecimentoTeste = new Estabelecimento(new char[]{}, "", TipoEstabelecimento.MERCADO, "");
 
         /* Variáveis locais */
-        var modoAdministrador = new ModoAdministrador();
-        var modoBeneficiario = new ModoBeneficiario();
+        //var modoAdministrador = new ModoAdministrador();
+        //var modoBeneficiario = new ModoBeneficiario();
         var rodarPrograma = true;
 
         /* Início do Programa */
@@ -25,12 +25,12 @@ public class Main {
 
         /* Configurações iniciais */
         Impressora.msgBasica("Antes de iniciar, é necessário que sejam feitas as configurações do programa.");
-        if(modoAdministrador.tentarEntrar()){
+        if(ModoAdministrador.tentarEntrar()){
 
             /* Rodar configurações iniciais */
             Impressora.linhaVazia();
             Impressora.aumentarIndentacao();
-            modoAdministrador.rodar();
+            ModoAdministrador.rodar();
 
             /* Sair das configurações iniciais */
             Impressora.diminuirIndentacao();
@@ -85,12 +85,12 @@ public class Main {
                         Impressora.titulo("Modo Beneficiário");
 
                         /* Tentar login como beneficiário */
-                        if(modoBeneficiario.tentarLogin(modoAdministrador.listaBeneficiariosCadastrados)){
+                        if(ModoBeneficiario.tentarLogin()){
                             Impressora.msgRedirecionamento("Fazendo login");
                             Impressora.linhaVazia();
                             Impressora.linhaSeparadoraDupla();
                             Impressora.linhaVazia();
-                            modoBeneficiario.rodar();
+                            ModoBeneficiario.rodar();
                         }
 
                         /* Fim do Modo Beneficiário */
@@ -104,8 +104,8 @@ public class Main {
                         Impressora.titulo("Modo Administrador");
 
                         /* Tentar entrar no Modo Administrador novamente */
-                        if(modoAdministrador.tentarEntrar()){
-                            modoAdministrador.rodar();
+                        if(ModoAdministrador.tentarEntrar()){
+                            ModoAdministrador.rodar();
                         }else{
                             Impressora.msgAtencao("Como foi excedido o limite de tentativas, o programa sera abortado");
                             rodarPrograma = false;

@@ -14,8 +14,7 @@ public class Estabelecimento {
 
     /** ------------------------------------------------------------- */
     /** ATRIBUTOS */
-
-    private  Object TipoEstabelecimento;
+    private TipoEstabelecimento tipo;
     private char[] codigo;
     private  String  nome;
     private  String endereco;
@@ -27,7 +26,7 @@ public class Estabelecimento {
     public Estabelecimento(char[] codigo, String nome, TipoEstabelecimento tipo, String endereco){
         this.codigo = codigo;
         this.nome = nome;
-        this.TipoEstabelecimento = TipoEstabelecimento;
+        this.tipo = tipo;
         this.endereco = endereco;
     }
     public Estabelecimento(String codigo, String nome, TipoEstabelecimento tipo, String endereco){
@@ -46,13 +45,11 @@ public class Estabelecimento {
         return nome;
     }
 
-    public Object getTipoEstabelecimento() {
-        return TipoEstabelecimento;
-    }
-
     public String getEndereco() {
         return endereco;
     }
+
+    public TipoEstabelecimento getTipo(){ return this.tipo; }
 
     /*public void setCodigo(char[] codigo){
         char[] newCodigo = new char[0];

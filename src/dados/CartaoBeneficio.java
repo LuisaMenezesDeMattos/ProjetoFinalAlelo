@@ -1,5 +1,6 @@
 package dados;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -16,7 +17,7 @@ public abstract class CartaoBeneficio {
     /** ------------------------------------------------------------- */
     /** ATRIBUTOS */
 
-    protected int[] senha = new int[4];
+    protected char[] senha = new char[4];
     // a senha deve ser, obrigatoriamente, 4 dígitos numéricos
 
     protected Double saldo;
@@ -41,23 +42,29 @@ public abstract class CartaoBeneficio {
     /** ------------------------------------------------------------- */
     /** CONSTRUTORES */
 
-    public CartaoBeneficio(int[] _senha){
+    public CartaoBeneficio(char[] _senha){
         this.senha = _senha;
     }
-    public CartaoBeneficio(int[] _senha, Date _dataValidade){
+    public CartaoBeneficio(char[] _senha, Date _dataValidade){
         this(_senha);
         this.dataValidade = _dataValidade;
     }
 
 
     /** ------------------------------------------------------------- */
-    /** MÉTODOS */
+    /** MÉTODOS PÚBLICOS */
 
-    //todo
     /** Método que retorna os dados deste cartão em forma de texto */
     @Override
-    public String toString(){
-        return "*dados cartão*"; /* retorno fictício */
+    public String toString() {
+        return  "Saldo: " + saldo +
+                "\nData de Validade: " + dataValidade +
+                ' ';
+    }
+
+    /** Método que retorna o saldo do cartão */
+    public String getSaldo(){
+        return formataReais(this.saldo);
     }
 
     //todo
@@ -107,7 +114,6 @@ public abstract class CartaoBeneficio {
             System.out.println("Pode realizar a compra");
         }
 
-        //todo
         return true; /* retorno fictício */
 
     }
@@ -140,11 +146,11 @@ public abstract class CartaoBeneficio {
 
     /** Método estático que gera uma senha de cartão aleatória
      * Autor: Luísa */
-    public static int[] gerarSenhaAleatoria(){
-        int[] senha = new int[4];
+    public static char[] gerarSenhaAleatoria(){
+        char[] senha = new char[4];
         var gerador = new Random();
         for(int i=0; i<4; i++){
-            senha[i] = gerador.nextInt(10);
+            senha[i] = (gerador.nextInt(10) + "").charAt(0);
         }
         return senha;
     }
@@ -155,8 +161,15 @@ public abstract class CartaoBeneficio {
         return new Date(); /* retorno fictício */
     }
 
+    /** Método estático que formata um valor em reais */
+    public static String formataReais(double valor){
+        return new DecimalFormat("'R$'.00").format(valor);
+    }
+
     /** Método que retorna o tipo do cartão */
     public abstract TipoCartaoBeneficio getTipo();
+
+
 
 
 }
