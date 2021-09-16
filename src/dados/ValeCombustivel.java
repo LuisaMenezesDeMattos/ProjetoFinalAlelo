@@ -28,4 +28,9 @@ public class ValeCombustivel extends CartaoBeneficio {
 
         return false;
     }
+
+    @Override
+    public TipoCartaoBeneficio getTipo() {
+        return TipoCartaoBeneficio.VALE_REFEICAO;
+    }
 }

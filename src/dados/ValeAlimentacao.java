@@ -48,4 +48,9 @@ public class ValeAlimentacao extends CartaoBeneficio {
 
         return false;
     }
+
+
+    public TipoCartaoBeneficio getTipo() {
+        return TipoCartaoBeneficio.VALE_ALIMENTACAO;
+    }
 }

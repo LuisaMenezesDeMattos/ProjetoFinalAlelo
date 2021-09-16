@@ -1,11 +1,18 @@
 package dados;
 
+import java.util.Date;
+
 public enum TipoCartaoBeneficio {
 
     VALE_ALIMENTACAO {
         @Override
-        public ICartaoBeneficio fabricar() {
-            return new ValeAlimentacao();
+        public CartaoBeneficio fabricar(int[] senha) {
+            return new ValeAlimentacao(senha);
+        }
+
+        @Override
+        public CartaoBeneficio fabricar(int[] senha, Date validade) {
+            return new ValeCombustivel(senha);
         }
 
         @Override
@@ -15,8 +22,13 @@ public enum TipoCartaoBeneficio {
     },
     VALE_REFEICAO {
         @Override
-        public ICartaoBeneficio fabricar() {
-            return new ValeRefeicao();
+        public CartaoBeneficio fabricar(int[] senha) {
+            return new ValeRefeicao(senha);
+        }
+
+        @Override
+        public CartaoBeneficio fabricar(int[] senha, Date validade) {
+            return new ValeCombustivel(senha);
         }
 
         @Override
@@ -26,8 +38,13 @@ public enum TipoCartaoBeneficio {
     },
     VALE_COMBUSTIVEL {
         @Override
-        public ICartaoBeneficio fabricar() {
-            return new ValeCombustivel();
+        public CartaoBeneficio fabricar(int[] senha) {
+            return new ValeCombustivel(senha);
+        }
+
+        @Override
+        public CartaoBeneficio fabricar(int[] senha, Date validade) {
+            return new ValeCombustivel(senha);
         }
 
         @Override
@@ -36,7 +53,10 @@ public enum TipoCartaoBeneficio {
         }
     };
 
-    public abstract ICartaoBeneficio fabricar();
+    public abstract CartaoBeneficio fabricar(int[] senha);
+    public abstract CartaoBeneficio fabricar(int[] senha, Date validade);
+
+    public abstract String label();
 
 
 }
