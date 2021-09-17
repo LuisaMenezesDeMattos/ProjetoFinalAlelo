@@ -164,8 +164,10 @@ public class ModoBeneficiario {
                 flag++;
                 Impressora.msgOpcao(flag, estabelecimento.getNome());
             }
-            int opcaoEstabelecimento = Leitor.lerOpcao(1, flag);
-            Estabelecimento estabelecimentoEscolhido = listaEstabelecimentosCadastrados.get(opcaoEstabelecimento - 1);
+            //int opcaoEstabelecimento = Leitor.lerOpcao(1, flag);
+            char opcaoEstabelecimento = Leitor.lerOpcao(new char[]{'1', '2', '3'});
+            int aux = Integer.parseInt(opcaoEstabelecimento + "");
+            Estabelecimento estabelecimentoEscolhido = listaEstabelecimentosCadastrados.get(aux - 1);
 
             /* Informar o valor */
             Impressora.msgBasica("Digite o valor da compra:");
