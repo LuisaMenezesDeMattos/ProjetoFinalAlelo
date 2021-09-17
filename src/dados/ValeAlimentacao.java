@@ -23,14 +23,6 @@ public class ValeAlimentacao extends CartaoBeneficio {
     @Override
     public boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra) {
 
-        if(this.seVencido()){
-            Impressora.msgAtencao("Cartão vencido!");
-            return false;
-        }
-        if(this.tentarPassarNoAntiFraude(valorCompra, estabelecimento) == false){
-            return false;
-        }
-
         // não deve realizar a compra se:
         //   > o estabelecimento é do tipo POSTO_COMBUSTIVEL
         //   > o cartão está vencido
@@ -41,10 +33,40 @@ public class ValeAlimentacao extends CartaoBeneficio {
         //   > adicionar a compra às transações do cartão
         //   > mudar o saldo (levando em conta o cashback de 1.5%)
 
+        // Testar se está vencido
+        if(this.seVencido()){
+            Impressora.msgAtencao("Cartão vencido!");
+            return false;
+        }
+
+        // Testar o sistema anti-fraude
+        if(this.tentarPassarNoAntiFraude(valorCompra, estabelecimento) == false){
+            return false;
+        }
+
+        // Testar se é do tipo combustível
+        if (estabelecimento.getTipo() == TipoEstabelecimento.POSTO_COMBUSTIVEL) {
+            Impressora.msgBasica(" Cartão inválido para este estabelecimento");
+            return false;
+        }
+
+        // Testar se o saldo é suficiente
+        if (this.saldo < valorCompra) {
+            Impressora.msgBasica("Seu saldo é insuficiente para esta compra");
+            return false;
+        }
+
+        // Cashback
         valorCompra -= valorCompra * 0.015;
+
+        // Nova Transação
         var novaTransacao = new Transacao(valorCompra, estabelecimento);
         listaTransacoes.add(novaTransacao);
+
+        // Mudar saldo
         this.saldo -= valorCompra;
+
+        // Retornar verdadeiro pois passou por todos os testes
         return true;
     }
 
