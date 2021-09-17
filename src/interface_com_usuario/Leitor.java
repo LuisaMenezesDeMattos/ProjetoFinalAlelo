@@ -154,7 +154,7 @@ public class Leitor {
     public static int lerOpcao(int primeiro, int ultimo){
         int length = (ultimo - primeiro + 1);
         char[] opcoes = new char[length];
-        for(int i=primeiro; i<=ultimo; i++){
+        for(int i=primeiro; i<ultimo; i++){
             opcoes[i] = Integer.toString(i).charAt(0);
         }
         return Integer.parseInt(lerOpcao(opcoes) + "");

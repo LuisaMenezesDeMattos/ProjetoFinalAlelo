@@ -229,9 +229,11 @@ public class ModoBeneficiario {
     /** Método que roda o menu principal do Modo Beneficiário */
     public static void rodar(){
 
+        /* Gerar estabelecimentos hard-coded */
+        listaEstabelecimentosCadastrados = Estabelecimento.geraLista();
+
         /* Título */
         Impressora.subtitulo("Beneficiário: " + beneficiarioLogado.getNome());
-        Impressora.linhaVazia();
 
         /* Escolher e executar as opções */
         char opcao;
@@ -245,31 +247,42 @@ public class ModoBeneficiario {
             Impressora.msgOpcao('s', "Sair");
             opcao = Leitor.lerOpcao(new char[]{'1', '2', 's'});
 
+            /* Organização e indentação */
+            if(opcao == 's'){
+                continue;
+            }else{
+                Impressora.linhaVazia();
+                Impressora.aumentarIndentacao();
+            }
+
             /* Executar opção escolhida */
-            Impressora.linhaVazia();
-            Impressora.aumentarIndentacao();
-            switch (opcao){
+            switch (opcao) {
 
                 /* OPÇÃO #1: Visualizar os dados dos cartões */
-                case '1':
+                case '1' -> {
                     Impressora.subtitulo("Visualizar Cartões");
-                    Impressora.msgBasica(beneficiarioLogado.dadosCartoes());
-                    Impressora.msgRedirecionamento("Voltando ao menu principal de beneficiário");
-                    break;
+                    beneficiarioLogado.imprimeDadosCartoes();
+                }
 
                 /* OPÇÃO #2: Escolher um cartão para gerenciar */
-                case '2':
+                case '2' -> {
                     Impressora.subtitulo("Gerenciar um Cartão");
                     rodarEscolhaCartao();
-                    Impressora.msgRedirecionamento("Voltando ao menu principal de beneficiário");
-                    break;
-
+                }
             }
+
+            Impressora.msgRedirecionamento("Voltando ao menu principal do Modo Beneficiário");
+            Impressora.linhaVazia();
+            Impressora.linhaSeparadoraDupla();
+            Impressora.diminuirIndentacao();
 
         }while(opcao != 's');
 
         /* Saindo do Modo Beneficiário */
         Impressora.msgRedirecionamento("Logoff");
+        Impressora.linhaVazia();
+        Impressora.linhaSeparadoraDupla();
+        Impressora.diminuirIndentacao();
 
     }
 

@@ -1,5 +1,7 @@
 package dados;
 
+import interface_com_usuario.Impressora;
+
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -14,8 +16,8 @@ public abstract class CartaoBeneficio {
     protected LocalDate dataValidade;
     protected ArrayList<Transacao> listaTransacoes = new ArrayList<>();
 
-    protected static int validadeDefaultEmMeses; // meses para o cálculo da validade de um cartão quando ele for criado
-    protected static Double saldoDefault; // valor automático pro saldo de um novo cartão quando for criado
+    protected static int validadeDefaultEmMeses = 12; // meses para o cálculo da validade de um cartão quando ele for criado
+    protected static Double saldoDefault = 500.0; // valor automático pro saldo de um novo cartão quando for criado
 
 
     /** ------------------------------------------------------------- */
@@ -104,12 +106,18 @@ public abstract class CartaoBeneficio {
     /** MÉTODOS PÚBLICOS */
 
     /** Método que retorna os dados deste cartão em forma de texto */
-    @Override
-    public String toString() {
-        return  "Saldo: " + saldo +
-                "\nData de Validade: " + dataValidade +
-                ' ';
-    }
+//    @Override
+//    public String toString() {
+//        return  "Saldo: " + saldo +
+//                "\nData de Validade: " + dataValidade +
+//                ' ';
+//    }
+
+    /** Método que retorna o tipo do cartão */
+    public abstract TipoCartaoBeneficio getTipo();
+
+    /** Método que imprime os dados do cartão em forma de texto */
+    public abstract void imprimeDados();
 
     /** Método que retorna o saldo do cartão */
     public String getSaldo(){
@@ -141,8 +149,6 @@ public abstract class CartaoBeneficio {
     /** Método que tenta realizar um pagamento neste cartão */
     public abstract boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra);
 
-    /** Método que retorna o tipo do cartão */
-    public abstract TipoCartaoBeneficio getTipo();
 
 
 

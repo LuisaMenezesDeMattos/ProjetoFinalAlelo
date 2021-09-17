@@ -3,6 +3,7 @@ package dados;
 
 /** ----------------------------------------------------------------- */
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /** CLASSE ESTABELECIMENTO
@@ -36,6 +37,14 @@ public class Estabelecimento {
 
     /** ------------------------------------------------------------- */
     /** MÉTODOS */
+
+    public static ArrayList<Estabelecimento> geraLista(){
+        var lista = new ArrayList<Estabelecimento>();
+        lista.add(new Estabelecimento("MDJ", "Mercadinho do João", TipoEstabelecimento.MERCADO, "Goiânia"));
+        lista.add(new Estabelecimento("RDM", "Restaurante da Maria", TipoEstabelecimento.RESTAURANTE, "Salvador"));
+        lista.add(new Estabelecimento("POP", "Posto Petrobrás", TipoEstabelecimento.POSTO_COMBUSTIVEL, "São Paulo"));
+        return lista;
+    }
 
     public char[] getCodigo() {
         return codigo;

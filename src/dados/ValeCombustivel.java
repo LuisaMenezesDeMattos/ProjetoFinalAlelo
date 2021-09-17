@@ -1,14 +1,10 @@
 package dados;
 
+import interface_com_usuario.Impressora;
+
 /** CLASSE VALE_COMBUSTÍVEL (do tipo CARTÃO_BENEFÍCIO) */
 
 public class ValeCombustivel extends CartaoBeneficio {
-
-    /** ------------------------------------------------------------- */
-    /** ATRIBUTOS */
-
-    private static int validadeDefaultEmMeses = 12;
-    private static Double saldoDefault = 400.0;
 
 
     /** ------------------------------------------------------------- */
@@ -27,6 +23,14 @@ public class ValeCombustivel extends CartaoBeneficio {
     @Override
     public boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra) {
 
+        if(this.seVencido()){
+            Impressora.msgAtencao("Cartão vencido!");
+            return false;
+        }
+        if(this.tentarPassarNoAntiFraude(valorCompra, estabelecimento) == false){
+            return false;
+        }
+
         // não deve realizar a compra se:
         //   > o estabelecimento NÃO é do tipo POSTO_COMBUSTIVEL
         //   > o cartão está vencido
@@ -38,12 +42,25 @@ public class ValeCombustivel extends CartaoBeneficio {
         //   > adicionar a compra às transações do cartão
         //   > mudar o saldo (levando em conta o a taxa de R$1,00)
 
-        return false;
+        valorCompra = valorCompra + 1;
+        var novaTransacao = new Transacao(valorCompra, estabelecimento);
+        listaTransacoes.add(novaTransacao);
+        this.saldo -= valorCompra;
+        return true;
     }
 
-    /** Sobrescrita do método que retorna o tipo do cartão */
     @Override
-    public TipoCartaoBeneficio getTipo() {
-        return TipoCartaoBeneficio.VALE_REFEICAO;
+    public void imprimeDados(){
+        Impressora.msgBasica(TipoCartaoBeneficio.VALE_COMBUSTIVEL.label()+ ":");
+        Impressora.aumentarIndentacao();
+        Impressora.msgBasica("Saldo: " + getSaldo());
+        Impressora.msgBasica("Data de validade: " + dataValidade);
+        Impressora.diminuirIndentacao();
     }
+
+    @Override
+    public TipoCartaoBeneficio getTipo(){
+        return TipoCartaoBeneficio.VALE_COMBUSTIVEL;
+    }
+
 }

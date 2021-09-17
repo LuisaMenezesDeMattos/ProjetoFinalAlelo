@@ -1,6 +1,9 @@
 package dados;
 
+import interface_com_usuario.Impressora;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Beneficiario {
 
@@ -48,10 +51,21 @@ public class Beneficiario {
     }
 
     /** Método que retorna os dados deste beneficiário como String */
-    @Override
-    public String toString() {
-        return "Nome:" + nome + "\n" +
-                "Lista de Cartões:\n" + listaCartoes;
+//    @Override
+//    public String toString() {
+//        return "Nome:" + nome + "\n" +
+//                "Lista de Cartões:\n" + listaCartoes;
+//    }
+
+    /** Método que imprime os dados do cartão em forma de texto */
+    public void imprimeDados(){
+        Impressora.msgBasica("Nome: " + getNome());
+        Impressora.msgBasica("Lista de cartões: ");
+        Impressora.aumentarIndentacao();
+        for(var cartao : listaCartoes){
+            cartao.imprimeDados();
+        }
+        Impressora.diminuirIndentacao();
     }
 
     /** Método que tenta usar o cartão, e retorna true caso dê certo, ou false caso não */
@@ -110,19 +124,7 @@ public class Beneficiario {
             boolean b = cartao.getTipo() == tipo;
 
             if(b) {
-
-                boolean senhaCorreta = true;
-                if(cartao.senha.length != senhaChecar.length){
-                    senhaCorreta  = false;
-                }else{
-                    for(int i=0; i<senhaChecar.length; i++){
-                        if(cartao.senha[i] != senhaChecar[i]){
-                            senhaCorreta = false;
-                            break;
-                        }
-                    }
-                }
-                return senhaCorreta;
+                return Arrays.equals(senhaChecar, cartao.senha);
             }
 
         }
@@ -132,15 +134,9 @@ public class Beneficiario {
     }
 
     /** Método que retorna os dados de cada cartão */
-    public String dadosCartoes () {
-
-        String retorno = "";
-
+    public void imprimeDadosCartoes () {
         for(var cartao : listaCartoes){
-            retorno = retorno + cartao.toString()+"\n";
+            cartao.imprimeDados();
         }
-
-
-        return retorno;
     }
 }

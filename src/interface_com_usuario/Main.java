@@ -110,6 +110,8 @@ public class Main {
                     }
                 }
 
+                Impressora.diminuirIndentacao();
+
             }while(opcaoModo != 's');
 
             /* Final do programa */

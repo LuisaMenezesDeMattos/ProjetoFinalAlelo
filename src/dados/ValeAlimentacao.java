@@ -1,14 +1,10 @@
 package dados;
 
+import interface_com_usuario.Impressora;
+
 /** CLASSE VALE_ALIMENTAÇÃO (do tipo CARTÃO_BENEFÍCIO) */
 
 public class ValeAlimentacao extends CartaoBeneficio {
-
-    /** ------------------------------------------------------------- */
-    /** ATRIBUTOS */
-
-    private static int validadeDefaultEmMeses = 12;
-    private static Double saldoDefault = 600.0;
 
 
     /** ------------------------------------------------------------- */
@@ -27,6 +23,14 @@ public class ValeAlimentacao extends CartaoBeneficio {
     @Override
     public boolean tentarPagamento(Estabelecimento estabelecimento, Double valorCompra) {
 
+        if(this.seVencido()){
+            Impressora.msgAtencao("Cartão vencido!");
+            return false;
+        }
+        if(this.tentarPassarNoAntiFraude(valorCompra, estabelecimento) == false){
+            return false;
+        }
+
         // não deve realizar a compra se:
         //   > o estabelecimento é do tipo POSTO_COMBUSTIVEL
         //   > o cartão está vencido
@@ -37,11 +41,25 @@ public class ValeAlimentacao extends CartaoBeneficio {
         //   > adicionar a compra às transações do cartão
         //   > mudar o saldo (levando em conta o cashback de 1.5%)
 
-        return false;
+        valorCompra -= valorCompra * 0.015;
+        var novaTransacao = new Transacao(valorCompra, estabelecimento);
+        listaTransacoes.add(novaTransacao);
+        this.saldo -= valorCompra;
+        return true;
     }
 
-    /** Sobrescrita do método que retorna o tipo do cartão */
-    public TipoCartaoBeneficio getTipo() {
+
+    @Override
+    public void imprimeDados(){
+        Impressora.msgBasica(TipoCartaoBeneficio.VALE_ALIMENTACAO.label()+ ":");
+        Impressora.aumentarIndentacao();
+        Impressora.msgBasica("Saldo: " + getSaldo());
+        Impressora.msgBasica("Data de validade: " + dataValidade);
+        Impressora.diminuirIndentacao();
+    }
+
+    @Override
+    public TipoCartaoBeneficio getTipo(){
         return TipoCartaoBeneficio.VALE_ALIMENTACAO;
     }
 }

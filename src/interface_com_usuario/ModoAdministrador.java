@@ -23,18 +23,6 @@ public class ModoAdministrador {
     /** -------------------------------------------------------------
     /** MÉTODOS DE APOIO */
 
-    //todo: APAGAR ESSE MÉTODO!!!
-    private static void hardCodeBeneficiarios(){
-        var senhaB = new char[]{'1', '2', '3', '4', '5', '6'};
-        var senhaC = new char[]{'1', '2', '3', '4'};
-        var cartoes = new ArrayList<CartaoBeneficio>();
-        cartoes.add(new ValeAlimentacao(senhaC));
-        cartoes.add(new ValeRefeicao(senhaC));
-        cartoes.add(new ValeCombustivel(senhaC));
-        var luisa = new Beneficiario("Luísa", senhaB, cartoes);
-        listaBeneficiariosCadastrados.add(luisa);
-    }
-
     /** Método que lê dados dos cartões de um novo beneficiário */
     private static ArrayList<CartaoBeneficio> lerDadosCartoes(){
 
@@ -140,46 +128,46 @@ public class ModoAdministrador {
         int posicao = 1;
         Impressora.linhaSeparadora();
         for(var beneficiario : listaBeneficiariosCadastrados){
-            Impressora.msgBasica(posicao++ + ". " + beneficiario.toString());
+            beneficiario.imprimeDados();
             Impressora.linhaSeparadora();
         }
     }
 
     /** Método que dá a chance de editar saldo e validade de um dado cartão de um dado usuário */
-    private static void editarCartao(){
-
-        /* Escolher o beneficiário */
-        Impressora.msgBasica("Nome do beneficiário:");
-        var beneficiarioEscolhido = buscarBeneficiario(Leitor.lerString());
-        boolean tentarNovamente = true;
-        while (beneficiarioEscolhido == null && tentarNovamente) {
-            Impressora.msgAtencao("Não há beneficiário com esse nome");
-            Impressora.msgBasica("Deseja tentar novamente, ou voltar ao menu anterior?");
-            Impressora.msgBasica("'t' - Tentar  |  'v' - Voltar");
-            char flag = Leitor.lerOpcao(new char[]{'t', 'v'});
-            if (flag == 't') {
-                Impressora.msgBasica("\nNova tentativa:");
-                beneficiarioEscolhido = buscarBeneficiario(Leitor.lerString());
-            }
-            else{
-                tentarNovamente = false;
-                Impressora.msgRedirecionamento("Voltando");
-                return;
-            }
-        }
-
-        /* Escolher o cartão a ser editado desse beneficiário */
-        Impressora.msgBasica("Deseja editar os dados de qual cartão?");
-        int flag = 0;
-        for(var tipo : tiposDeCartao){
-            flag++;
-            Impressora.msgOpcao(flag, tipo.label());
-        }
-        int opcao = Leitor.lerOpcao(1, flag);
-
-        Impressora.msgBasica("-- FUNCIONALIDADE NÃO COMPLETA AINDA --");
-
-    }
+//    private static void editarCartao(){
+//
+//        /* Escolher o beneficiário */
+//        Impressora.msgBasica("Nome do beneficiário:");
+//        var beneficiarioEscolhido = buscarBeneficiario(Leitor.lerString());
+//        boolean tentarNovamente = true;
+//        while (beneficiarioEscolhido == null && tentarNovamente) {
+//            Impressora.msgAtencao("Não há beneficiário com esse nome");
+//            Impressora.msgBasica("Deseja tentar novamente, ou voltar ao menu anterior?");
+//            Impressora.msgBasica("'t' - Tentar  |  'v' - Voltar");
+//            char flag = Leitor.lerOpcao(new char[]{'t', 'v'});
+//            if (flag == 't') {
+//                Impressora.msgBasica("\nNova tentativa:");
+//                beneficiarioEscolhido = buscarBeneficiario(Leitor.lerString());
+//            }
+//            else{
+//                tentarNovamente = false;
+//                Impressora.msgRedirecionamento("Voltando");
+//                return;
+//            }
+//        }
+//
+//        /* Escolher o cartão a ser editado desse beneficiário */
+//        Impressora.msgBasica("Deseja editar os dados de qual cartão?");
+//        int flag = 0;
+//        for(var tipo : tiposDeCartao){
+//            flag++;
+//            Impressora.msgOpcao(flag, tipo.label());
+//        }
+//        int opcao = Leitor.lerOpcao(1, flag);
+//
+//        Impressora.msgBasica("-- FUNCIONALIDADE NÃO COMPLETA AINDA --");
+//
+//    }
 
 
     /** -------------------------------------------------------------
@@ -223,9 +211,6 @@ public class ModoAdministrador {
      * Autores: Rafael & Luísa */
     public static void rodar(){
 
-        //todo: tirar!!!
-        hardCodeBeneficiarios();
-
         /* Título */
         Impressora.titulo("Modo Administrador");
 
@@ -238,14 +223,14 @@ public class ModoAdministrador {
             Impressora.subtitulo("Menu do Administrador");
             Impressora.msgOpcao('1', "Cadastrar novo beneficiário");
             Impressora.msgOpcao('2', "Ver lista de beneficiários cadastrados");
-            Impressora.msgOpcao('3', "Editar dados dos cartões de um beneficiário");
+            //Impressora.msgOpcao('3', "Editar dados dos cartões de um beneficiário");
             Impressora.msgOpcao('s', "Sair do Modo Administrador");
             Impressora.linhaSeparadora();
 
             /* Escolher a opção */
             Impressora.linhaVazia();
             Impressora.msgBasica("Digite a opção desejada:");
-            opcao = Leitor.lerOpcao(new char[]{'1', '2', '3', 's'});
+            opcao = Leitor.lerOpcao(new char[]{'1', '2', /*'3',*/ 's'});
 
             /* Organização e indentação */
             if(opcao == 's'){
@@ -256,25 +241,25 @@ public class ModoAdministrador {
             }
 
             /* Executar opção escolhida */
-            switch(opcao){
+            switch (opcao) {
 
                 /* OPÇÃO 1: Cadastrar novo beneficiário */
-                case '1':
+                case '1' -> {
                     Impressora.subtitulo("Cadastrar novo Beneficiário:");
                     cadastrarNovoBeneficiario();
-                    break;
+                }
 
                 /* OPÇÃO 2: Mostrar lista beneficiários cadastrados */
-                case '2':
+                case '2' -> {
                     Impressora.subtitulo("Beneficiários Cadastrados:");
                     visualizarBeneficiarios();
-                    break;
+                }
 
-                /* OPÇÃO 3: Editar dados de um dos cartões de um beneficiário */
+                /* OPÇÃO 3: Editar dados de um dos cartões de um beneficiário
                 case '3':
                     Impressora.subtitulo("Editar dados dos cartões de um beneficiário:");
                     editarCartao();
-                    break;
+                    break;*/
             }
 
             Impressora.msgRedirecionamento("Voltando ao menu do Modo Administrador");
