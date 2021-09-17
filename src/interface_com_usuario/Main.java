@@ -1,20 +1,15 @@
 package interface_com_usuario;
 
-import dados.Estabelecimento;
-import dados.TipoEstabelecimento;
 
 public class Main {
 
-    /** ------------------------------------------------------------- */
+    /** -------------------------------------------------------------
     /** MÉTODO MAIN */
 
     public static void main(String[] args) {
 
-        var estabelecimentoTeste = new Estabelecimento(new char[]{}, "", TipoEstabelecimento.MERCADO, "");
 
         /* Variáveis locais */
-        //var modoAdministrador = new ModoAdministrador();
-        //var modoBeneficiario = new ModoBeneficiario();
         var rodarPrograma = true;
 
         /* Início do Programa */
@@ -72,20 +67,19 @@ public class Main {
                 }else{
                     Impressora.linhaVazia();
                     Impressora.aumentarIndentacao();
-                    //Impressora.aumentarIndentacao();
                 }
 
                 /* Executar opção escolhida */
-                switch (opcaoModo){
+                switch (opcaoModo) {
 
                     /* MODO BENEFICIÁRIO */
-                    case '1':
+                    case '1' -> {
 
                         /* Título */
                         Impressora.titulo("Modo Beneficiário");
 
                         /* Tentar login como beneficiário */
-                        if(ModoBeneficiario.tentarLogin()){
+                        if (ModoBeneficiario.tentarLogin()) {
                             Impressora.msgRedirecionamento("Fazendo login");
                             Impressora.linhaVazia();
                             Impressora.linhaSeparadoraDupla();
@@ -95,26 +89,25 @@ public class Main {
 
                         /* Fim do Modo Beneficiário */
                         Impressora.msgRedirecionamento("Saindo do Modo Beneficiário");
-                        break;
+                    }
 
                     /* MODO ADMINISTRADOR */
-                    case '2':
+                    case '2' -> {
 
                         /* Título */
                         Impressora.titulo("Modo Administrador");
 
                         /* Tentar entrar no Modo Administrador novamente */
-                        if(ModoAdministrador.tentarEntrar()){
+                        if (ModoAdministrador.tentarEntrar()) {
                             ModoAdministrador.rodar();
-                        }else{
+                        } else {
                             Impressora.msgAtencao("Como foi excedido o limite de tentativas, o programa sera abortado");
-                            rodarPrograma = false;
+                            opcaoModo = 's';
                         }
 
                         /* Fim do Modo Administrador */
                         Impressora.msgRedirecionamento("Saindo do Modo Administrador");
-                        break;
-
+                    }
                 }
 
             }while(opcaoModo != 's');

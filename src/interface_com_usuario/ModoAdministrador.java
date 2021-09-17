@@ -2,29 +2,26 @@ package interface_com_usuario;
 
 import dados.*;
 
-import java.time.LocalDate;
 import java.util.*;
 
 public class ModoAdministrador {
 
-    /** ------------------------------------------------------------- */
+    /** -------------------------------------------------------------
     /** ATRIBUTOS */
 
-    private static int senhaAdm = 12345;
-    // senha para entrar no modo administrador
-
-    private static ArrayList<Beneficiario> listaBeneficiariosCadastrados = new ArrayList<Beneficiario>();
-    // inicia vazio pois no início do programa, ninguém está cadastrado
+    private final static int senhaAdm = 12345;
+    private static ArrayList<Beneficiario> listaBeneficiariosCadastrados = new ArrayList<>();
+    private static TipoCartaoBeneficio[] tiposDeCartao = TipoCartaoBeneficio.values();
 
 
-    /** ------------------------------------------------------------- */
+    /** -------------------------------------------------------------
     /** CONSTRUTOR DE CLASSE ESTÁTICA */
 
     private ModoAdministrador(){}
 
 
-    /** ------------------------------------------------------------- */
-    /** MÉTODOS PRIVADOS DE APOIO */
+    /** -------------------------------------------------------------
+    /** MÉTODOS DE APOIO */
 
     //todo: APAGAR ESSE MÉTODO!!!
     private static void hardCodeBeneficiarios(){
@@ -44,7 +41,6 @@ public class ModoAdministrador {
         /* Variáveis locais */
         var cartoesBeneficiario = new ArrayList<CartaoBeneficio>();
         Map<TipoCartaoBeneficio, char[]> senhas = new HashMap<>();
-        TipoCartaoBeneficio[] tiposDeCartao = TipoCartaoBeneficio.values();
 
         /* Senhas dos Cartões */
         Impressora.msgBasica("Deseja definir senhas aleatórias para os cartões, ou definir manualmente?:");
@@ -53,17 +49,17 @@ public class ModoAdministrador {
         Impressora.aumentarIndentacao();
 
         if(opcao == 'a'){
-            for (var tipoDeCartao: tiposDeCartao) {
+            for (var tipo : tiposDeCartao) {
                 var senhaGerada = CartaoBeneficio.gerarSenhaAleatoria();
-                senhas.put(tipoDeCartao, senhaGerada);
-                Impressora.msgSenha("Senha do " + tipoDeCartao.label(), senhaGerada);
+                senhas.put(tipo, senhaGerada);
+                Impressora.msgSenha("Senha do " + tipo.label(), senhaGerada);
             }
         }
         else{
-            for (var tipoDeCartao: tiposDeCartao) {
-                Impressora.msgBasica("Senha do " + tipoDeCartao.label() + " (4 dígitos):");
-                var senhaDada = Leitor.lerArrayDeDigitos(4);;
-                senhas.put(tipoDeCartao, senhaDada);
+            for (var tipo : tiposDeCartao) {
+                Impressora.msgBasica("Senha do " + tipo.label() + " (4 dígitos):");
+                var senhaDada = Leitor.lerArrayDeDigitos(4);
+                senhas.put(tipo, senhaDada);
             }
         }
         Impressora.diminuirIndentacao();
@@ -75,17 +71,21 @@ public class ModoAdministrador {
         Impressora.aumentarIndentacao();
         if(opcao == 'p'){
             Impressora.msgAtencao("Validade dos 3 cartões definida para daqui 12 meses");
-            for (var tipoDeCartao: tiposDeCartao) {
-                cartoesBeneficiario.add(tipoDeCartao.fabricar(senhas.get(tipoDeCartao)));
+            for (var tipo : tiposDeCartao) {
+                var senhaNova = senhas.get(tipo);
+                var cartaoNovo = tipo.fabricar(senhaNova);
+                cartoesBeneficiario.add(cartaoNovo);
             }
         }
         else{
             Impressora.msgBasica("Favor informar a validade, em meses, de cada cartão:");
             Impressora.msgBasica("   (Obs.: para cartões vencidos, digite uma quatidade negativa de meses)");
-            for (var tipoDeCartao: tiposDeCartao) {
-                Impressora.msgBasica(tipoDeCartao.label());
+            for (var tipo : tiposDeCartao) {
+                Impressora.msgBasica(tipo.label());
                 var dateValidade = CartaoBeneficio.calcularDataValidade(Leitor.lerInteiro());
-                cartoesBeneficiario.add(tipoDeCartao.fabricar(senhas.get(tipoDeCartao), dateValidade));
+                var senhaNova = senhas.get(tipo);
+                var cartaoNovo = tipo.fabricar(senhaNova, dateValidade);
+                cartoesBeneficiario.add(cartaoNovo);
             }
         }
 
@@ -94,11 +94,8 @@ public class ModoAdministrador {
         return cartoesBeneficiario;
     }
 
-
-    /** ------------------------------------------------------------- */
-    /** MÉTODOS PÚBLICOS DE APOIO */
-
-    public static Beneficiario getBeneficiario(String nome){
+    /** Método que recebe um nome e retorna o beneficiário correspondente */
+    public static Beneficiario buscarBeneficiario(String nome){
         for(var beneficiario : listaBeneficiariosCadastrados){
             if(beneficiario.getNome().equals(nome)){
                 return beneficiario;
@@ -107,6 +104,7 @@ public class ModoAdministrador {
         return null;
     }
 
+    /** Método que checa se há algum beneficiário cadastrado com um certo nome e uma certa senha */
     public static Beneficiario checarDadosLoginBeneficiario(String nome, char[] senha){
         for(var beneficiario : listaBeneficiariosCadastrados){
             if(beneficiario.checarDadosLogin(nome, senha)){
@@ -117,8 +115,8 @@ public class ModoAdministrador {
     }
 
 
-    /** ------------------------------------------------------------- */
-    /** MÉTODOS PRIVADOS QUE EXECUTAM AS OPÇÕES DO USUÁRIO */
+    /** -------------------------------------------------------------
+    /** MÉTODOS PRIVADOS QUE EXECUTAM AS OPÇÕES DO USUÁRIO
 
     /** Método que lê dados no novo beneficiário, e o adiciona à listaUsuariosCadastrados */
     private static void cadastrarNovoBeneficiario(){
@@ -149,12 +147,42 @@ public class ModoAdministrador {
 
     /** Método que dá a chance de editar saldo e validade de um dado cartão de um dado usuário */
     private static void editarCartao(){
+
+        /* Escolher o beneficiário */
         Impressora.msgBasica("Nome do beneficiário:");
-        String nome = Leitor.lerString();
+        var beneficiarioEscolhido = buscarBeneficiario(Leitor.lerString());
+        boolean tentarNovamente = true;
+        while (beneficiarioEscolhido == null && tentarNovamente) {
+            Impressora.msgAtencao("Não há beneficiário com esse nome");
+            Impressora.msgBasica("Deseja tentar novamente, ou voltar ao menu anterior?");
+            Impressora.msgBasica("'t' - Tentar  |  'v' - Voltar");
+            char flag = Leitor.lerOpcao(new char[]{'t', 'v'});
+            if (flag == 't') {
+                Impressora.msgBasica("\nNova tentativa:");
+                beneficiarioEscolhido = buscarBeneficiario(Leitor.lerString());
+            }
+            else{
+                tentarNovamente = false;
+                Impressora.msgRedirecionamento("Voltando");
+                return;
+            }
+        }
+
+        /* Escolher o cartão a ser editado desse beneficiário */
+        Impressora.msgBasica("Deseja editar os dados de qual cartão?");
+        int flag = 0;
+        for(var tipo : tiposDeCartao){
+            flag++;
+            Impressora.msgOpcao(flag, tipo.label());
+        }
+        int opcao = Leitor.lerOpcao(1, flag);
+
+        Impressora.msgBasica("-- FUNCIONALIDADE NÃO COMPLETA AINDA --");
+
     }
 
 
-    /** ------------------------------------------------------------- */
+    /** -------------------------------------------------------------
     /** MÉTODOS PÚBLICOS */
 
     /** Método que lê uma dada senha no máximo 3 vezes, e retorna se está certa

@@ -1,49 +1,31 @@
 package dados;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
-/** ----------------------------------------------------------------- */
-/** CLASSE BENEFICIÁRIO
- * Autor: Rafael
- * Função: Guarda os dados de um determinado beneficiário cadastrado no sistema,
- *          e executa as funções que um beneficiário deve poder executar
- * */
-
 
 public class Beneficiario {
 
-    /** ------------------------------------------------------------- */
-    /**
-     * ATRIBUTOS
-     */
+    /** -------------------------------------------------------------
+    /** ATRIBUTOS */
 
     private String nome;
     private char[] senha = new char[6];
     private ArrayList<CartaoBeneficio> listaCartoes;
 
-    // quando o beneficiário for criado (no construtor), devem ser criados
-    // juntamente com ele os seus cartões
 
+    /** -------------------------------------------------------------
+    /** CONSTRUTOR */
 
-    /** ------------------------------------------------------------- */
-    /**
-     * CONSTRUTOR
-     */
-
-    public Beneficiario(String nome, char[] senha, ArrayList<CartaoBeneficio> listaCartoes) {
-        this.nome = nome;
-        this.senha = senha;
-        this.listaCartoes = listaCartoes;
+    public Beneficiario(String _nome, char[] _senha, ArrayList<CartaoBeneficio> _listaCartoes) {
+        this.nome = _nome;
+        this.senha = _senha;
+        this.listaCartoes = _listaCartoes;
     }
 
 
-    /** ------------------------------------------------------------- */
+    /** -------------------------------------------------------------
     /** MÉTODOS */
 
-    /**
-     * Método que checa os dados deste beneficiário
-     */
+    /** Método que checa os dados deste beneficiário */
     public boolean checarDadosLogin(String nomeChecar, char[] senhaChecar) {
         boolean nomeCorreto = this.nome.equals(nomeChecar);
         boolean senhaCorreta = true;
@@ -65,20 +47,14 @@ public class Beneficiario {
         }
     }
 
-    /**
-     * Método que retorna os dados deste beneficiário como String
-     */
+    /** Método que retorna os dados deste beneficiário como String */
     @Override
     public String toString() {
-        return "Beneficiario:\n" +
-                "nome:" + nome + "\n" +
+        return "Nome:" + nome + "\n" +
                 "Lista de Cartões:\n" + listaCartoes;
     }
 
-
-    /**
-     * Método que tenta usar o cartão, e retorna true caso dê certo, ou false caso não
-     */
+    /** Método que tenta usar o cartão, e retorna true caso dê certo, ou false caso não */
     public boolean tentarPassarCartao(TipoCartaoBeneficio tipo, Double valor, Estabelecimento estabelecimento) {
 
         for(var cartao : listaCartoes) {
@@ -93,9 +69,7 @@ public class Beneficiario {
 
     }
 
-    /**
-     * Método que recebe um tipo de cartão, e retorna os dados do mesmo
-     */
+    /** Método que recebe um tipo de cartão, e retorna os dados do mesmo */
     public String extratoCartao(TipoCartaoBeneficio tipo) {
 
         for(var cartao : listaCartoes){
@@ -111,7 +85,6 @@ public class Beneficiario {
     }
 
     /** Método que retorna o nome do beneficiário */
-
     public String getNome() {
         return nome;
     }
@@ -129,7 +102,6 @@ public class Beneficiario {
         return "";
 
     }
-
 
     /** Método que retorna se uma dada senha corresponde ao um dado cartão */
     public boolean checarSenhaCartao (char[] senhaChecar, TipoCartaoBeneficio tipo){
@@ -158,7 +130,6 @@ public class Beneficiario {
         return false;
 
     }
-
 
     /** Método que retorna os dados de cada cartão */
     public String dadosCartoes () {

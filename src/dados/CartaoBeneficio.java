@@ -2,40 +2,20 @@ package dados;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-
-/** ----------------------------------------------------------------- */
-/** CLASSE ABSTRATA CARTÃO-BENEFÍCIO
- * Função: Declara as características e comportamentos em comum para todos
- *          os cartões do sistema (vale-alimentação, vale-refeição, e vale-combustível)
- * */
 
 public abstract class CartaoBeneficio {
 
-    /** ------------------------------------------------------------- */
+    /** -------------------------------------------------------------
     /** ATRIBUTOS */
 
     protected char[] senha = new char[4];
-    // a senha deve ser, obrigatoriamente, 4 dígitos numéricos
-
     protected Double saldo;
-    // lembrando que não pode ser negativo
-
     protected LocalDate dataValidade;
-    // lembrando que não pode efetuar a compra com um cartão vencido
+    protected ArrayList<Transacao> listaTransacoes = new ArrayList<>();
 
-    protected ArrayList<Transacao> listaTransacoes = new ArrayList<Transacao>();
-    // guarda o histórico de todas as transações deste cartão
-    // começa vazio
-
-    protected static int validadeDefaultEmMeses;
-    // meses para o cálculo da validade de um cartão quando ele for criado
-
-    protected static Double saldoDefault;
-    // valor automático pro saldo de um novo cartão quando for criado
+    protected static int validadeDefaultEmMeses; // meses para o cálculo da validade de um cartão quando ele for criado
+    protected static Double saldoDefault; // valor automático pro saldo de um novo cartão quando for criado
 
 
     /** ------------------------------------------------------------- */
